@@ -1,9 +1,11 @@
 from fastapi import FastAPI, Body, Depends
 
-from app.model import PostSchema, UserSchema, UserLoginSchema
+from app.model import PostSchema, UserSchema, UserLoginSchema, Users, Posts
 from app.auth.auth_bearer import JWTBearer
 from app.auth.auth_handler import signJWT
-
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
 posts = [
     {
@@ -13,24 +15,29 @@ posts = [
     }
 ]
 
+Base = declarative_base()
+engine = create_engine("postgresql+psycopg2://dimka:12345678@localhost/sqlalchemy_tuts")
+Session = sessionmaker(bind=engine)
+session = Session()
+
 users = []
 
 app = FastAPI()
-
 
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
     return {"message": "Welcome to your blog!."}
 
-
 @app.post("/posts", dependencies=[Depends(JWTBearer())], tags=["posts"])
 async def add_post(post: PostSchema) -> dict:
-    post.id = len(posts) + 1
-    posts.append(post.dict())
+    # post.id = len(posts) + 1
+    # posts.append(post.dict())
+    new_post = Posts(title=post.title, text=post.text, create_date = post.create_date)
+    session.add(new_post)
+    session.commit()
     return {
         "data": "post added."
     }
-
 
 @app.get("/posts/{id}", tags=["posts"])
 async def get_single_post(id: int) -> dict:
@@ -47,7 +54,9 @@ async def get_single_post(id: int) -> dict:
 
 @app.post("/user/signup", tags=["user"])
 async def create_user(user: UserSchema = Body(...)):
-    users.append(user) # replace with db call, making sure to hash the password first
+    new_user = Users(fullname=user.fullname, email=user.email, password = user.password)
+    session.add(new_user)
+    session.commit()
     return signJWT(user.email)
 
 def check_user(data: UserLoginSchema):

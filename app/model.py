@@ -1,32 +1,34 @@
 from pydantic import BaseModel, Field, EmailStr
+from csv import register_dialect
+from sqlalchemy import Column, DateTime, String, Integer, func  
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 
-class PostSchema(BaseModel):
-    id: int = Field(default=None)
-    title: str = Field(...)
-    content: str = Field(...)
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "title": "Securing FastAPI applications with JWT.",
-                "content": "In this tutorial, you'll learn how to secure your application by enabling authentication using JWT. We'll be using PyJWT to sign, encode and decode JWT tokens...."
-            }
-        }
+class Users(Base):  
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    fullname = Column(String, unique=True)
+    email = Column(String)
+    password = Column(String)
 
 class UserSchema(BaseModel):
     fullname: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "fullname": "Abdulazeez Abdulazeez Adeshina",
-                "email": "abdulazeez@x.com",
-                "password": "weakpassword"
-            }
-        }
+class Posts(Base):  
+    __tablename__ = 'posts'
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    text = Column(String)
+    create_date = Column(DateTime)
+
+class PostSchema(BaseModel):
+    id: int = Field(default=None)
+    title: str = Field(...)
+    text: str = Field(...)
+    create_date: str = Field(...)
 
 class UserLoginSchema(BaseModel):
     email: EmailStr = Field(...)
