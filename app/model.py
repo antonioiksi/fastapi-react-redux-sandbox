@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, EmailStr
 from csv import register_dialect
 from sqlalchemy import Column, DateTime, String, Integer, func  
 from sqlalchemy.ext.declarative import declarative_base
+from pydantic_sqlalchemy import sqlalchemy_to_pydantic
 
 Base = declarative_base()
 
@@ -12,10 +13,7 @@ class Users(Base):
     email = Column(String)
     password = Column(String)
 
-class UserSchema(BaseModel):
-    fullname: str = Field(...)
-    email: EmailStr = Field(...)
-    password: str = Field(...)
+UserSchema = sqlalchemy_to_pydantic(Users)
 
 class Posts(Base):  
     __tablename__ = 'posts'
@@ -24,11 +22,7 @@ class Posts(Base):
     text = Column(String)
     create_date = Column(DateTime)
 
-class PostSchema(BaseModel):
-    id: int = Field(default=None)
-    title: str = Field(...)
-    text: str = Field(...)
-    create_date: str = Field(...)
+PostSchema = sqlalchemy_to_pydantic(Posts)
 
 class UserLoginSchema(BaseModel):
     email: EmailStr = Field(...)

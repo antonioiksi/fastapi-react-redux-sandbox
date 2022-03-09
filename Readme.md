@@ -1,6 +1,6 @@
 #  Requirements
 
-- python, postgresql
+- python3.8, postgresql
 
 #  Install
 

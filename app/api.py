@@ -6,6 +6,7 @@ from app.auth.auth_handler import signJWT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+import jwt
 
 posts = [
     {
@@ -72,3 +73,13 @@ async def user_login(user: UserLoginSchema = Body(...)):
     return {
         "error": "Wrong login details!"
     }
+
+from decouple import config
+JWT_SECRET = config("secret")
+JWT_ALGORITHM = config("algorithm")
+
+@app.post("/update")
+def update_token(token : str = Body(...)):
+    decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    username = decoded_token["user_id"]
+    return signJWT(username)
