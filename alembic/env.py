@@ -17,7 +17,19 @@ fileConfig(config.config_file_name)
 # add your model's MetaData object here
 # for 'autogenerate' support
 # target_metadata = None
-target_metadata = model.Base.metadata  
+from sqlalchemy import engine_from_config, pool, MetaData
+from app.db.models import (posts, users)
+
+def combine_metadata(*args):
+    m = MetaData()
+    for metadata in args:
+        for t in metadata.tables.values():
+            t.tometadata(m)
+    return m
+
+target_metadata = combine_metadata(posts.Base.metadata, users.Base.metadata)
+
+# target_metadata = model.Base.metadata  
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
