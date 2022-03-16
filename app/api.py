@@ -1,15 +1,15 @@
-from fastapi import FastAPI, Body, Depends
+from fastapi import FastAPI, Body, Depends, Request
 
 from app.db.models.posts import Posts
 from app.db.models.users import Users
 from app.db.schemas.posts import PostBase
-from app.db.schemas.users import UserBase, UserLoginSchema
+from app.db.schemas.users import UserBase, UserLoginSchema, UserModel
 
 from app.auth.auth_bearer import JWTBearer
 from app.auth.auth_handler import signJWT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 import jwt, bcrypt
 
 from decouple import config
@@ -39,30 +39,20 @@ async def read_root() -> dict:
     return {"message": "Welcome to your blog!."}
 
 @app.post("/posts", dependencies=[Depends(JWTBearer())], tags=["posts"])
-async def add_post(post: PostBase) -> dict:
-    
-    decoded_token = jwt.decode(post.token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-    user_id = decoded_token["user_id"]
+async def add_post(post: PostBase, request: Request) -> dict:
+    token = request.headers.get('Authorization').replace("Bearer ", "")
 
-    new_post = Posts(title=post.title, text=post.text, create_date = post.create_date, user_id=user_id)
+    decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    fullname = decoded_token["user_id"]
+    user_id = session.query(Users).filter_by(fullname=fullname).first().id
+
+    new_post = Posts(title=post.title, text=post.text, user_id=user_id)
     session.add(new_post)
     session.commit()
     return {
-        "data": "post added."
+        "data": "post added by " + fullname,
     }
 
-@app.get("/posts/{id}", tags=["posts"])
-async def get_single_post(id: int) -> dict:
-    if id > len(posts):
-        return {
-            "error": "No such post with the supplied ID."
-        }
-
-    for post in posts:
-        if post["id"] == id:
-            return {
-                "data": post
-            }
 
 @app.post("/user/signup", tags=["user"])
 async def create_user(user: UserBase = Body(...)):
@@ -94,8 +84,16 @@ async def user_login(user: UserLoginSchema = Body(...)):
 def update_token(token : str = Body(...)):
     decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
     username = decoded_token["user_id"]
-    return signJWT(username)
 
+@app.post("/delete")
+async def delete_posts(user: UserModel):
+    a = session.query(Posts).filter(Posts.user_id == user.user_id).delete()
+    session.commit()
+    return "delete " + str(a) + " elements"
 
+@app.get("/user/{id}/posts", tags=["posts"])
+async def get_single_post(id: int):
+    posts = session.query(Posts).filter_by(user_id=id).all()
+    return posts
 
     # print(bcrypt.hashpw(b'password', b'$2b$12$9cBs.G4pe7jC1fGFgNGIau'))

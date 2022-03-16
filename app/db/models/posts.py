@@ -6,7 +6,7 @@ Base = declarative_base()
 class Posts(Base):  
     __tablename__ = 'posts'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String, ForeignKey('users.fullname'))
+    user_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String)
     text = Column(String)
     create_date = Column(DateTime)

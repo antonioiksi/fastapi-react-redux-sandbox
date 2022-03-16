@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from sqlalchemy.ext.declarative import declarative_base
+from typing import Optional
+
 Base = declarative_base()
 
 class UserBase(BaseModel):
@@ -27,5 +29,14 @@ class UserLoginSchema(BaseModel):
             "example": {
                 "fullname": "Dimka Di",
                 "password": "dima-pass",
+            }
+        }
+
+class UserModel(BaseModel):
+    user_id: str = None
+    class Config:
+        schema_extra = {
+            "example": {
+                "user_id": "1",
             }
         }

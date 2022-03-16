@@ -11,7 +11,7 @@ python3.8 -m venv venv && source venv/bin/activate
 
 ## packages через requiremtns.txt
 ```sh
-pip install wheel psycopg2-binary fastapi==0.62.0 uvicorn==0.12.3 PyJWT==1.7.1 python-decouple==3.3 "pydantic[email]" alembic pydantic_sqlalchemy
+pip install wheel psycopg2-binary fastapi==0.62.0 uvicorn==0.12.3 PyJWT==1.7.1 python-decouple==3.3 "pydantic[email]" alembic pydantic_sqlalchemy bcrypt
 ```
 
 ## settings
