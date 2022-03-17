@@ -18,4 +18,9 @@ class Users(Base):
     email = Column(String)
     password = Column(String)
     address = Column(String)
+
+class Session(Base):  
+    __tablename__ = 'session'
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    token = Column(String)
     
