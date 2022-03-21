@@ -89,14 +89,16 @@ async def user_login(user: UserLoginSchema = Body(...)):
                 out = "create token"
 
             session.commit()
-            print(out)
-            return token
+            # print(out)
+            return {
+                "token": token
+            }
 
         return {
             "error" : "wrong password"
         }
     return {
-        "error": "User does not exist"
+        "error": "user does not exist"
     }
 
 @app.post("/update")
@@ -139,5 +141,3 @@ def check_session(token):
 
     print("invalid session")
     return False
-    
-    # print(bcrypt.hashpw(b'password', b'$2b$12$9cBs.G4pe7jC1fGFgNGIau'))
