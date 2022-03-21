@@ -16,7 +16,6 @@ from app.auth.auth_handler import decodeJWT
 from decouple import config
 JWT_SECRET = config("secret")
 JWT_ALGORITHM = config("algorithm")
-JWT_PASSWORD = config("password")
 
 posts = [
     {
