@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, Depends, Request
+from fastapi import FastAPI, Body, Depends, Request, HTTPException
 
 from app.db.models.posts import Posts, Session
 from app.db.models.users import Users
@@ -67,8 +67,9 @@ async def create_user(user: UserBase = Body(...)):
     session.commit()
     return {"user successfully created"}
 
-@app.post("/user/login", tags=["user"])
+@app.post("/user/login", tags=["user"], status_code=200)
 async def user_login(user: UserLoginSchema = Body(...)):
+    '''authorisation users'''
     user_data = session.query(Users).filter_by(fullname=user.fullname).first()
 
     if user_data:
@@ -89,17 +90,14 @@ async def user_login(user: UserLoginSchema = Body(...)):
                 out = "create token"
 
             session.commit()
-            # print(out)
+            print(out)
             return {
                 "token": token
             }
 
-        return {
-            "error" : "wrong password"
-        }
-    return {
-        "error": "user does not exist"
-    }
+        raise HTTPException(status_code=404, detail="wrong password")
+
+    raise HTTPException(status_code=404, detail="user does not exist")
 
 @app.post("/update")
 def update_token(token : str = Body(...)):
@@ -120,15 +118,19 @@ async def get_single_post(id: int):
 
 @app.get("/logout", dependencies=[Depends(JWTBearer())])
 async def logout(request: Request):
+    print(request.json)
     token = request.headers.get('Authorization').replace("Bearer ", "")
     decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
     user_id = decoded_token["user_id"]
-
-    row = session.query(Session).filter_by(user_id=user_id).first()
-    session.delete(row)
-    session.commit()
     
-    return {"Successful logout"}
+    try:
+        row = session.query(Session).filter_by(user_id=user_id).first()
+        session.delete(row)
+        session.commit()
+
+        return {"Successful logout"}
+    except:
+        raise HTTPException(status_code=404, detail="session does not found")
 
 def check_session(token):
     try:

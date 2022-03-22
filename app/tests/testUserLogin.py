@@ -1,6 +1,7 @@
 import unittest
 from app.api import user_login
 from app.db.schemas.users import UserLoginSchema
+from fastapi import HTTPException
 
 class TestUserLogin(unittest.IsolatedAsyncioTestCase):
 
@@ -20,13 +21,21 @@ class TestUserLogin(unittest.IsolatedAsyncioTestCase):
       self.assertTrue(istoken)
 
     async def test_invalid_name(self):
-      result = await user_login(self.invalid_name)
-      self.assertEqual(result, {"error": "user does not exist"})
+      expect_exception = "user does not exist"
+
+      with self.assertRaises(HTTPException) as context:
+            await user_login(self.invalid_name)
+ 
+      self.assertTrue(expect_exception in context.exception.detail)
 
     async def test_invalid_password(self):
-      result = await user_login(self.invalid_password)
-      self.assertEqual(result, {"error" : "wrong password"})
- 
+      expect_exception = "wrong password"
+
+      with self.assertRaises(HTTPException) as context:
+            await user_login(self.invalid_password)
+
+      self.assertTrue(expect_exception in context.exception.detail)
+       
 if __name__ == '__main__':
     unittest.main()
   
