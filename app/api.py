@@ -38,8 +38,8 @@ app = FastAPI()
 async def read_root() -> dict:
     return {"message": "Welcome to your blog!."}
 
-@app.post("/posts", dependencies=[Depends(JWTBearer())], tags=["posts"])
-async def add_post(post: PostBase, request: Request) -> dict:
+@app.post("/posts", dependencies=[Depends(JWTBearer())])
+def add_post(post: PostBase, request: Request) -> dict:
     token = request.headers.get('Authorization').replace("Bearer ", "")
 
     if check_session(token):
@@ -52,23 +52,26 @@ async def add_post(post: PostBase, request: Request) -> dict:
         return {
             "data": "post added"
         }
-    return {"Invalid token"}
-
-
+    raise HTTPException(status_code=401, detail="invalid token")
 
 @app.post("/user/signup", tags=["user"])
-async def create_user(user: UserBase = Body(...)):
+def create_user(user: UserBase = Body(...)):
     # TODO: gensalt возможно заменить на статическую
-    pwhash = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt())
-    password_hash = pwhash.decode('utf8')
+    user_data = session.query(Users).filter_by(fullname=user.fullname).first()
 
-    new_user = Users(fullname=user.fullname, email=user.email, password = password_hash)
-    session.add(new_user)
-    session.commit()
-    return {"user successfully created"}
+    if not user_data:
+        pwhash = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt())
+        password_hash = pwhash.decode('utf8')
 
+        new_user = Users(fullname=user.fullname, email=user.email, password = password_hash)
+        session.add(new_user)
+        session.commit()
+        return {"user successfully created"}
+
+    raise HTTPException(status_code=409, detail="user already exists")
+    
 @app.post("/user/login", tags=["user"], status_code=200)
-async def user_login(user: UserLoginSchema = Body(...)):
+def user_login(user: UserLoginSchema = Body(...)):
     '''authorisation users'''
     user_data = session.query(Users).filter_by(fullname=user.fullname).first()
 
@@ -90,7 +93,7 @@ async def user_login(user: UserLoginSchema = Body(...)):
                 out = "create token"
 
             session.commit()
-            print(out)
+            # print(out)
             return {
                 "token": token
             }
@@ -106,19 +109,18 @@ def update_token(token : str = Body(...)):
     return signJWT(user_id)
 
 @app.post("/delete")
-async def delete_posts(user: UserModel):
+def delete_posts(user: UserModel):
     count = session.query(Posts).filter(Posts.user_id == user.user_id).delete()
     session.commit()
     return "delete " + str(count) + " elements"
 
 @app.get("/user/{id}/posts", tags=["posts"])
-async def get_single_post(id: int):
+def get_single_post(id: int):
     posts = session.query(Posts).filter_by(user_id=id).all()
     return posts
 
 @app.get("/logout", dependencies=[Depends(JWTBearer())])
-async def logout(request: Request):
-    print(request.json)
+def logout(request: Request):
     token = request.headers.get('Authorization').replace("Bearer ", "")
     decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
     user_id = decoded_token["user_id"]
@@ -138,8 +140,20 @@ def check_session(token):
         if session.query(Session).filter_by(token=token).first():
             return True
     except:
-        print("invalid token")
+        # print("invalid token")
         return False
 
-    print("invalid session")
+    # print("invalid session")
     return False
+
+def delete_user(fullname):
+    if session.query(Users).filter_by(fullname=fullname).first():
+        session.delete(session.query(Users).filter_by(fullname=fullname).first())
+        session.commit()
+
+        return {"successful delete"}
+    session.rollback()
+    raise HTTPException(status_code=404, detail="user doesnt found")
+    
+
+# print("\033[92m" + str(123) + "\033[0m")
