@@ -90,3 +90,18 @@ authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGkxa
     "data": "post added."
 }
 ```
+
+# Tests
+
+## Unittest
+
+**Run all tests**
+
+```sh
+python -m unittest discover -s app/tests/Unittest -v
+```
+**Run one file**
+
+```sh
+python -m unittest app/tests/Unittest/testUserLogout.py -v
+```
