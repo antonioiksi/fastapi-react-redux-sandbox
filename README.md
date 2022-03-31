@@ -1,6 +1,21 @@
-# Fastapi-jwt
+# Fastapi-ReactJS
 
-## How to run
+## How to develop
+```sh
+cd project
+# open README.md
+
+```
+
+
+## How to update cookiecutter template 
+
+```sh
+cp project {{cookiecutter.project_slug}}
+# update files with variables
+```
+
+## How to get your own project by cookiecutter 
 
 Step 1. Install cookiecutter:
 ```sh
@@ -11,5 +26,5 @@ pip install cookiecutter
 
 Step 2. Install cookiecutter:
 ```sh
-cookiecutter http://172.22.119.131:3000/AnswerPRO/fastapi-jwt.git
+cookiecutter .
 ```
