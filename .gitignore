@@ -5,3 +5,5 @@
 .docker
 
 project/data
+
+**/*.log
