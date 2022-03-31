@@ -1,10 +1,10 @@
 {
-  "project_slug": "fastapi-jwt",
+  "project_slug": "fastapi-reactjs",
   "project_name": "{{ cookiecutter.project_slug }}",
   "port": "8000",
-  "postgres_user": "postgres",
-  "postgres_password": "password",
-  "postgres_database": "app",
+  "db_user": "postgres",
+  "db_password": "password",
+  "db_name": "app",
   "superuser_email": "admin@{{cookiecutter.project_name}}.com",
   "superuser_password": "password",
   "secret_key": "super_secret"
