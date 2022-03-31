@@ -1,39 +1,48 @@
 version: '3.7'
 services:
-  nginx:
-    image: nginx:1.17
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-    ports:
-      - 8500:80
-    depends_on:
-      - backend
-
-
-  postgres:
-      image: postgres:12
-      restart: always
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-      ports:
-        - '8501:5432'
-      volumes:
-        - ./data:/var/lib/postgresql/data:cached
 
   backend:
     build:
       context: backend
       dockerfile: Dockerfile
-    command: python main.py
-    tty: true
+    # command: python main.py
+    command: uvicorn app.api:app --reload --host 0.0.0.0 --port ${BACKEND_PORT}
+    # tty: true
     ports:
-      - 8502:8080
+      - 8502:${BACKEND_PORT}
     volumes:
       - ./backend:/app/:cached
       - ./.docker/.ipython:/root/.ipython:cached
     environment:
       PYTHONPATH: .
-      DATABASE_URL: 'postgresql://postgres:postgresd@postgres:8501/postgres'
+      DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}'
     depends_on:
       - "postgres"
+
+  postgres:
+    image: postgres:12
+    restart: always
+    env_file:
+      - ./docker-compose.env
+    # environment:
+    #   # POSTGRES_USER: cookiecutter_postgres_user
+    #   POSTGRES_PASSWORD: cookiecutter_postgres_root_password
+    #   # 
+    #   DB_USER: cookiecutter_postgres_user
+    #   DB_PASSWORD: cookiecutter_postgres_password
+    #   DB_NAME: cookiecutter_postgres_database
+    ports:
+      - '8501:5432'
+    volumes:
+      # - ./backend/scripts:/www/scripts
+      - ./backend/scripts/create-db:/docker-entrypoint-initdb.d # load data after postgres started
+
+  # nginx:
+  #   image: nginx:1.17
+  #   volumes:
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+  #   ports:
+  #     - 8500:80
+  #   depends_on:
+  #     - backend
+

@@ -16,17 +16,17 @@ pip install -r requirements.txt
 
 ## settings
 - Create file and change secret key:
-    ```sh
-        cd fastapi-jwt
+```sh
+cd fastapi-jwt
 
-    cat > .env << EOF
-    secret=b'key' 
-    algorithm=HS256
+cat > .env << EOF
+secret=b'key' 
+algorithm=HS256
 EOF
-        ```
+```
 - Change file alembic.ini:
 
-        sqlalchemy.url = postgresql+psycopg2://login:password@localhost/dbname
+`sqlalchemy.url = postgresql+psycopg2://login:password@localhost/dbname`
 
 - Create db with dbname
 
@@ -48,7 +48,7 @@ python  main.py
 
 
 ## api signup
-    http://localhost:8888/user/signup 
+    http://localhost:8080/user/signup 
 
 **Input json**
 ```json

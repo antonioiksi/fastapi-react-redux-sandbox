@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, Body, Depends, Request, HTTPException
 
 from app.db.models.posts import Posts, Session
@@ -35,7 +37,9 @@ posts = [
 ]
 
 Base = declarative_base()
-engine = create_engine("postgresql+psycopg2://dimka:12345678@localhost/sqlalchemy_tuts")
+# engine = create_engine("postgresql+psycopg2://dimka:12345678@localhost/sqlalchemy_tuts")
+database_url = os.getenv("DATABASE_URL")
+engine = create_engine(database_url)
 Session_local = sessionmaker(bind=engine)
 session = Session_local()
 
