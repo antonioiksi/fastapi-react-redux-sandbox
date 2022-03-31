@@ -4,6 +4,8 @@
 
 Step 1. Install cookiecutter:
 ```sh
+python3 -m venv .venv
+source .venv/bin/activate
 pip install cookiecutter
 ```
 
