@@ -35,7 +35,7 @@ services:
     #   - '8501:5432'
     volumes:
       # - ./backend/scripts:/www/scripts
-      - ./backend/scripts/create-db:/docker-entrypoint-initdb.d # load data after postgres started
+      - ./backend/app/scripts/create-db:/docker-entrypoint-initdb.d # load data after postgres started
 
   # nginx:
   #   image: nginx:1.17
