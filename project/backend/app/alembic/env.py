@@ -24,7 +24,7 @@ def get_url():
 # for 'autogenerate' support
 # target_metadata = None
 from sqlalchemy import engine_from_config, pool, MetaData
-from db.models import posts, users
+from models import posts, users
 
 
 def combine_metadata(*args):
