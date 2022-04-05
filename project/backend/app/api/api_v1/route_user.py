@@ -1,32 +1,15 @@
 from fastapi import Body, Depends, Request, HTTPException, APIRouter
-import os
-
-from app.models.posts import Posts, Session
-from app.models.users import Users
-from app.schemas.users import UserBase, UserLoginSchema
-
+from app.db.models.posts import Posts, Session
+from app.db.models.users import Users
+from app.db.schemas.users import UserBase, UserLoginSchema
 from app.auth.auth_bearer import JWTBearer
 from app.auth.auth_handler import signJWT
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, delete
-from sqlalchemy.orm import sessionmaker
+from app.db.session import session
+from app.core.config import JWT_SECRET, JWT_ALGORITHM
 
 import logging, jwt, bcrypt
-
-from decouple import config
-import logging, jwt, bcrypt
-
-JWT_SECRET = config("secret")
-JWT_ALGORITHM = config("algorithm")
 
 user_router = APIRouter()
-
-Base = declarative_base()
-# engine = create_engine("postgresql+psycopg2://dimka:12345678@localhost/sqlalchemy_tuts")
-database_url = os.getenv("DATABASE_URL")
-engine = create_engine(database_url)
-Session_local = sessionmaker(bind=engine)
-session = Session_local()
 
 
 @user_router.post("/user/signup")

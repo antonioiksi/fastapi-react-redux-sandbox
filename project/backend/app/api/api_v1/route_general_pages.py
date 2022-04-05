@@ -1,15 +1,11 @@
 from fastapi import APIRouter, Body
-
-general_router = APIRouter()
-
-from decouple import config
+from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.auth.auth_handler import signJWT
+
+
 import logging, jwt
 
-JWT_SECRET = config("secret")
-JWT_ALGORITHM = config("algorithm")
-
-user_router = APIRouter()
+general_router = APIRouter()
 
 
 @general_router.get("/")

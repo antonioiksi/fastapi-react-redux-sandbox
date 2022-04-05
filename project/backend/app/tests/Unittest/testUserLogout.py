@@ -1,17 +1,13 @@
-import unittest
-from app.apis import (
-    user_login,
-    create_user,
-    delete_user,
-    logout,
-    session,
-    Session,
-    Users,
-)
-from app.schemas.users import UserLoginSchema, UserBase
+from app.api.api_v1.route_user import user_login, create_user, delete_user, logout
+from app.db.session import session
+from app.db.models.posts import Session
+from app.db.models.users import Users
+from app.db.schemas.users import UserLoginSchema, UserBase
 from fastapi import HTTPException, Request
 from starlette.requests import Request
 from starlette.datastructures import Headers
+
+import unittest
 import configparser
 
 

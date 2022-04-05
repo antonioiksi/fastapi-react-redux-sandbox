@@ -1,6 +1,6 @@
 import unittest
-from app.apis import create_user, delete, delete_user
-from app.schemas.users import UserBase, UserLoginSchema
+from app.api.api_v1.route_user import create_user, delete_user
+from app.db.schemas.users import UserBase
 from fastapi import HTTPException
 import configparser
 
