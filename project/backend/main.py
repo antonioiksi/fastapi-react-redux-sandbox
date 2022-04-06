@@ -1,5 +1,5 @@
 import uvicorn
-from app.api.base import api_router
+from app.api.api_v1.main import api_router
 from fastapi import FastAPI
 import logging
 

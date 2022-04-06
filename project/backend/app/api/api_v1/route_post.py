@@ -1,7 +1,7 @@
 from fastapi import Depends, Request, HTTPException, APIRouter
 from app.db.models.posts import Posts, Session
-from app.auth.auth_bearer import JWTBearer
-from app.auth.auth_handler import decodeJWT
+from app.core.auth.auth_bearer import JWTBearer
+from app.core.auth.auth_handler import decodeJWT
 from app.db.schemas.posts import PostBase
 from app.db.schemas.users import UserModel
 from app.core.config import JWT_SECRET, JWT_ALGORITHM

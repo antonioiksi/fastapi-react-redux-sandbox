@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
-from app.auth.auth_handler import signJWT
+from app.core.auth.auth_handler import signJWT
 
 
 import logging, jwt
