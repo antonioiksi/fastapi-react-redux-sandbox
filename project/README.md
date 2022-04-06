@@ -12,6 +12,11 @@
 Check environment in file `docker-compose.env`
 
 ```sh
+cd backend && cat << EOF > .env
+secret=b'deff1952d59f883ece260e8683fed21ab0ad9a53323eca4f'
+algorithm=HS256
+EOF
+
 docker-compose --env-file docker-compose.env up -d
 
 docker exec -i project_backend_1 bash -c "cat << EOF > .env

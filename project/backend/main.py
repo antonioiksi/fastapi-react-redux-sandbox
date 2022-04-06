@@ -38,7 +38,7 @@ app = FastAPI(
 app.include_router(api_router)
 
 logging.basicConfig(
-    filename="logs/sample.log",
+    filename="app/logs/sample.log",
     level=logging.INFO,
     filemode="w",
     format="%(asctime)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s",
