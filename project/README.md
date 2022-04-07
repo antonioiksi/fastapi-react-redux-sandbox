@@ -5,29 +5,36 @@
 * FastAPI
 * Postgres
 * SqlAlchemy with Alembic for migration
-* Docker compose
 * Nginx as a reverse proxy (to allow backend and frontend run on the same port)
+
+DevOps
+* Docker
+* Docker compose
+* Make
 
 ## Quick start
 
-<!-- TODO: check busy ports, default ports 8500, 8501, 8502 -->
+> If docker located on remote machine allow docker.sock on remote machine
+> over TCP and 
+> Setup env **DOCKER_HOST** locally
+> `$ export DOCKER_HOST=tcp://172.22.115.221:2376`
 
-Check environment in file `docker-compose.env`
-
+### Start develop
+Just run
 ```sh
-
-export DOCKER_HOST=tcp://172.22.115.221:2376
-docker rmi -f project_backend:latest
-docker rm -f project_backend_1
-docker run -it --rm --name test room33/backend:latest /bin/bash
-
-
-
-docker-compose --env-file docker-compose.env up -d
-docker-compose --env-file docker-compose.env build
-
-docker exec -i project_backend_1 bash -c "cd app && alembic upgrade head"
+$ make
 ```
+
+### Stop develop
+```sh
+$ make clean` 
+```
+
+### Run test
+```sh
+make tests
+```
+
 
 ## Api Documentation
 

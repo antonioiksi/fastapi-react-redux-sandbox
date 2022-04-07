@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  backend:
+    # Run server with reload file changes mode
+    command: python -m uvicorn main:app --reload --host 0.0.0.0 --port 8080
+    ports:
+      - 8502:8080
+      - 5678:5678 # DEBUG PORT
+    volumes:
+      - ./backend:/WORKDIR

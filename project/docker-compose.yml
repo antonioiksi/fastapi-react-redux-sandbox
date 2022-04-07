@@ -1,23 +1,11 @@
 version: '3.7'
 services:
-
   backend:
     image: room33/backend
     build:
       context: backend
       dockerfile: Dockerfile
-    # command: python main.py
-    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn main:app --reload --host 0.0.0.0 --port 8080"]
-    # command: python -m uvicorn main:app --reload --host 0.0.0.0 --port 8080
-    # tty: true
-    ports:
-      - 8502:8080
-      - 5678:5678 # DEBUG PORT
-    volumes:
-      - ./backend:/WORKDIR
-    #   - ./.docker/.ipython:/root/.ipython:cached
     environment:
-      # PYTHONPATH: .
       DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}'
       JWT_SECRET: ${JWT_SECRET}
       JWT_ALGORITHM: ${JWT_ALGORITHM}
@@ -27,17 +15,11 @@ services:
   postgres:
     image: postgres:12
     restart: always
-    env_file:
-      - ./docker-compose.env
-    # environment:
-    #   # POSTGRES_USER: cookiecutter_postgres_user
-    #   POSTGRES_PASSWORD: cookiecutter_postgres_root_password
-    #   # 
-    #   DB_USER: cookiecutter_postgres_user
-    #   DB_PASSWORD: cookiecutter_postgres_password
-    #   DB_NAME: cookiecutter_postgres_database
-    # ports:
-    #   - '8501:5432'
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     volumes:
       # - ./backend/scripts:/www/scripts
       - ./backend/app/scripts/create-db:/docker-entrypoint-initdb.d # load data after postgres started
