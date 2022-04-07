@@ -3,14 +3,15 @@ from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.core.auth.auth_handler import signJWT
 
 
-import logging, jwt
+import logging
+import jwt
 
 general_router = APIRouter()
 
 
 @general_router.get("/")
 def read_root():
-    return {"message": "Welcome to your API blog!."}
+    return {"message": "Welcome to your API blog!!!!."}
 
 
 @general_router.post("/update")

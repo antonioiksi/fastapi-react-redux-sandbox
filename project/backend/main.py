@@ -30,7 +30,7 @@ app = FastAPI(
     openapi_url="/api",
     openapi_tags=tags_metadata,
     contact={
-        "name": "Sasha the Amazing and Dima the Fantastic",
+        "name": "Sasha is Amazing and Dima is Fantastic",
         "email": "peryevd1@gmail.com",
     },
 )

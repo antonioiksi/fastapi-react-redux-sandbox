@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Remote Debug Backend on localhost",
+            "name": "Debug localhost",
             "type": "python",
             "request": "attach",
             "port": 5678,
@@ -18,7 +18,7 @@
             ]
         },
         {
-            "name": "Remote Debug Backend on 172.22.115.221",
+            "name": "Debug 172.22.115.221",
             "type": "python",
             "request": "attach",
             "port": 5678,

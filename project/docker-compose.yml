@@ -2,23 +2,25 @@ version: '3.7'
 services:
 
   backend:
+    image: room33/backend
     build:
       context: backend
       dockerfile: Dockerfile
     # command: python main.py
-    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080"]
-
-    # command: uvicorn main:app --reload --host 0.0.0.0 --port 8080
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn main:app --reload --host 0.0.0.0 --port 8080"]
+    # command: python -m uvicorn main:app --reload --host 0.0.0.0 --port 8080
     # tty: true
     ports:
       - 8502:8080
       - 5678:5678 # DEBUG PORT
     volumes:
-      - ./backend:/app/:cached
+      - ./backend:/WORKDIR
     #   - ./.docker/.ipython:/root/.ipython:cached
     environment:
-      PYTHONPATH: .
+      # PYTHONPATH: .
       DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}'
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
     depends_on:
       - "postgres"
 
