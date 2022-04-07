@@ -5,11 +5,14 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
-    command: python main.py
+    # command: python main.py
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn main:app --host 0.0.0.0 --port 8080"]
+
     # command: uvicorn main:app --reload --host 0.0.0.0 --port 8080
     # tty: true
     ports:
       - 8502:8080
+      - 5678:5678 # DEBUG PORT
     volumes:
       - ./backend:/app/:cached
     #   - ./.docker/.ipython:/root/.ipython:cached

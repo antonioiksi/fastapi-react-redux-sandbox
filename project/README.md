@@ -9,21 +9,15 @@
 * Nginx as a reverse proxy (to allow backend and frontend run on the same port)
 
 ## Quick start
+
+<!-- TODO: check busy ports, default ports 8500, 8501, 8502 -->
+
 Check environment in file `docker-compose.env`
 
 ```sh
-cd backend && cat << EOF > .env
-secret=b'deff1952d59f883ece260e8683fed21ab0ad9a53323eca4f'
-algorithm=HS256
-EOF
-
 docker-compose --env-file docker-compose.env up -d
 
-docker exec -i project_backend_1 bash -c "cat << EOF > .env
-secret=b'deff1952d59f883ece260e8683fed21ab0ad9a53323eca4f'
-algorithm=HS256
-EOF
-cd app && alembic upgrade head"
+docker exec -i project_backend_1 bash -c "cd app && alembic upgrade head"
 ```
 
 ## Api Documentation
