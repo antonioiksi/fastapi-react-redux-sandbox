@@ -1,7 +1,9 @@
-import uvicorn
 from app.api.api_v1.main import api_router, tags_metadata
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 import logging
+import uvicorn
 
 description = """
 Fastapi-jwt API helps you do awesome stuff. 🚀
@@ -35,7 +37,18 @@ app = FastAPI(
     },
 )
 
+origins = ["http://localhost", "http://localhost:3000"]
+
 app.include_router(api_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 logging.basicConfig(
     filename="app/logs/sample.log",
