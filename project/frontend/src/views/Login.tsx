@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState } from "react";
 import {
   Paper,
   Grid,
@@ -6,13 +6,22 @@ import {
   Button,
   FormControlLabel,
   Checkbox,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { Face, Fingerprint } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
-import { Navigate } from 'react-router-dom';
-import { login} from '../utils/auth';
-import AlertTitle from '@mui/material/AlertTitle';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Face, Fingerprint } from "@material-ui/icons";
+import { Alert } from "@material-ui/lab";
+import { Navigate } from "react-router-dom";
+import { login } from "../utils/auth";
+import AlertTitle from "@mui/material/AlertTitle";
+
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Avatar, Typography, Link } from "@material-ui/core";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { green, pink } from "@mui/material/colors";
+import VpnKeySharpIcon from "@mui/icons-material/VpnKeySharp";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -22,26 +31,28 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
   button: {
-    textTransform: 'none',
+    textTransform: "none",
   },
   marginTop: {
-    marginTop: 10,
+    marginTop: 30,
   },
 }));
 
 export const Login: FC = () => {
   const classes = useStyles();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (_: React.MouseEvent) => {
-    setError('');
+  const usehandleSubmit = async (_: React.MouseEvent) => {
+    setError("");
+
     try {
       const data = await login(email, password);
 
       if (data) {
-        alert('token:' + data["token"])
+        navigate("/", { replace: true });
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -53,95 +64,96 @@ export const Login: FC = () => {
       }
     }
   };
-
-  return(
-    <Paper className={classes.padding}>
-      <div className={classes.margin}>
-        <Grid container spacing={8} alignItems="flex-end">
-          <Grid item>
-            <Face />
-          </Grid>
-          <Grid item md={true} sm={true} xs={true}>
-            <TextField
-              id="email"
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.currentTarget.value)
-              }
-              fullWidth
-              autoFocus
-              required
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={8} alignItems="flex-end">
-          <Grid item>
-            <Fingerprint />
-          </Grid>
-          <Grid item md={true} sm={true} xs={true}>
-            <TextField
-              id="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.currentTarget.value)
-              }
-              fullWidth
-              required
-            />
-          </Grid>
-        </Grid>
-        <br />
-        <Grid container alignItems="center">
-          {error && (
-            <Grid item>
-              <Alert severity="error">{error}</Alert>
+  const paperStyle = {
+    padding: 20,
+    height: 470,
+    width: 350,
+    margin: "20vh auto",
+  };
+  const avatarStyle = { backgroundColor: "1B00B0" };
+  return (
+    <Paper elevation={10} style={paperStyle}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h6">
+            Sign in
+          </Typography>
+          <div className={classes.margin}>
+            <Grid container spacing={8} alignItems="flex-end">
+              <Grid item md={true} sm={true} xs={true}>
+                <TextField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  value={email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.currentTarget.value)
+                  }
+                  fullWidth
+                  autoFocus
+                  required
+                  inputProps={{ style: { backgroundColor: "WhiteSmoke" } }}
+                />
+              </Grid>
             </Grid>
-          )}
-        </Grid>
-        <Grid container alignItems="center" justify="space-between">
-          <Grid item>
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Remember me"
-            />
-          </Grid>
-          <Grid item>
-            <Button
-              disableFocusRipple
-              disableRipple
-              className={classes.button}
-              variant="text"
-              color="primary"
-            >
-              Forgot password ?
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid container justify="center" className={classes.marginTop}>
-          {' '}
-          <Button
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={() => <Navigate to="/signup" />}
-          >
-            Sign Up
-          </Button>{' '}
-          &nbsp;
-          <Button
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleSubmit}
-          >
-            Login
-          </Button>
-        </Grid>
-      </div>
+            <Grid container spacing={5} alignItems="flex-end">
+              <Grid item md={true} sm={true} xs={true}>
+                <TextField
+                  id="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  value={password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setPassword(e.currentTarget.value)
+                  }
+                  fullWidth
+                  required
+                  inputProps={{ style: { backgroundColor: "WhiteSmoke" } }}
+                />
+              </Grid>
+            </Grid>
+            <br />
+            <Grid container alignItems="center">
+              {error && (
+                <Grid item>
+                  <Alert severity="error">{error}</Alert>
+                </Grid>
+              )}
+            </Grid>
+            <Grid container alignItems="center" justify="space-between">
+              <Grid item>
+                <FormControlLabel
+                  control={<Checkbox color="primary" />}
+                  label="Remember me"
+                />
+              </Grid>
+            </Grid>
+            <Grid container justify="center" className={classes.marginTop}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={usehandleSubmit}
+                startIcon={<VpnKeySharpIcon />}
+              >
+                Login
+              </Button>
+            </Grid>
+          </div>
+        </Box>
+      </Container>
     </Paper>
   );
 };
