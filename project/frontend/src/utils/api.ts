@@ -1,12 +1,24 @@
 import { BACKEND_URL } from '../config';
 
-export const getMessage = async () => {
-  const response = await fetch(BACKEND_URL);
+export const getUsers = async () => {
+  const response = await fetch(BACKEND_URL + "/users");
 
   const data = await response.json();
 
-  if (data.message) {
-    return data.message;
+  if (data) {
+    return data;
+  }
+
+  return Promise.reject('Failed to get message from backend');
+};
+
+export const getPosts = async () => {
+  const response = await fetch(BACKEND_URL + "/user/-1/posts");
+
+  const data = await response.json();
+
+  if (data) {
+    return data;
   }
 
   return Promise.reject('Failed to get message from backend');

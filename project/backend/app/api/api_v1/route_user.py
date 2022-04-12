@@ -67,9 +67,20 @@ def user_login(user: UserLoginSchema = Body(...)):
 
 @user_router.get("/user/{id}/posts")
 def get_user_posts(id: int):
-    posts = session.query(Posts).filter_by(user_id=id).all()
+    if id == -1:
+        posts = session.query(Posts).all()
+    else:
+        posts = session.query(Posts).filter_by(user_id=id).all()
+
     logging.info("Get posts from user [%s]", id)
     return posts
+
+
+@user_router.get("/users")
+def get_users():
+    users = session.query(Users).all()
+    logging.info("Get users [%s]", id)
+    return users
 
 
 @user_router.get("/logout", dependencies=[Depends(JWTBearer())])

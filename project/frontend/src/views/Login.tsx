@@ -8,20 +8,17 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Face, Fingerprint } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
-import { Navigate } from "react-router-dom";
 import { login } from "../utils/auth";
-import AlertTitle from "@mui/material/AlertTitle";
-
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Avatar, Typography, Link } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { green, pink } from "@mui/material/colors";
 import VpnKeySharpIcon from "@mui/icons-material/VpnKeySharp";
 import { useNavigate } from "react-router-dom";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../config/theme";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -70,9 +67,9 @@ export const Login: FC = () => {
     width: 350,
     margin: "20vh auto",
   };
-  const avatarStyle = { backgroundColor: "1B00B0" };
+
   return (
-    <Paper elevation={10} style={paperStyle}>
+    <Paper elevation={15} style={paperStyle}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -82,9 +79,12 @@ export const Login: FC = () => {
             alignItems: "center",
           }}
         >
-          <Avatar>
-            <LockOutlinedIcon />
-          </Avatar>
+          <ThemeProvider theme={theme}>
+            <Avatar>
+              <LockOutlinedIcon />
+            </Avatar>
+          </ThemeProvider>
+
           <Typography component="h1" variant="h6">
             Sign in
           </Typography>
