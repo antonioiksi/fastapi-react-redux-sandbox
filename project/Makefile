@@ -5,7 +5,7 @@
 # IMG    = ${NAME}:${TAG}
 # LATEST := ${NAME}:latest
 
-all: build run-dev migrate
+all: build run-dev migrate initial-db
 
 hello:
 	echo "hello world" 
@@ -41,3 +41,6 @@ tests: migrate
 
 test-one: migrate
 	docker exec -it project_backend_1 python -m unittest app/tests/Unittest/testUserLogout.py -v
+
+initial-db:
+	docker exec -i project_backend_1 bash -c "python init_db.py"

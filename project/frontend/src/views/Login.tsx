@@ -13,13 +13,11 @@ import { login } from "../utils/auth";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Avatar, Typography, Link } from "@material-ui/core";
+import { Avatar, Typography } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import VpnKeySharpIcon from "@mui/icons-material/VpnKeySharp";
 import { useNavigate } from "react-router-dom";
-import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../config/theme";
-
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(2),
@@ -79,11 +77,13 @@ export const Login: FC = () => {
             alignItems: "center",
           }}
         >
-          <ThemeProvider theme={theme}>
-            <Avatar>
-              <LockOutlinedIcon />
-            </Avatar>
-          </ThemeProvider>
+          <Avatar
+            style={{
+              backgroundColor: theme.palette.primary.main,
+            }}
+          >
+            <LockOutlinedIcon />
+          </Avatar>
 
           <Typography component="h1" variant="h6">
             Sign in

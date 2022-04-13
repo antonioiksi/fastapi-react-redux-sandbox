@@ -23,6 +23,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useNavigate } from "react-router-dom";
 import theme from "../config/theme";
+import CustomizedTables from "./tables/posts";
 
 const drawerWidth = 240;
 
@@ -96,7 +97,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export const Home: FC = () => {
-  let [message, setMessage] = useState();
+  let [message, setMessage] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
@@ -191,56 +192,57 @@ export const Home: FC = () => {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-          <ListItemButton
-            key="User"
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
-            }}
-            onClick={loadUsers}
-          >
-            <ListItemIcon
+        <ThemeProvider theme={theme}>
+          <List>
+            <ListItemButton
+              key="User"
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : "auto",
-                justifyContent: "center",
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
               }}
+              onClick={loadUsers}
             >
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="User" sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-          <ListItemButton
-            key="Post"
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
-            }}
-            onClick={loadPosts}
-          >
-            <ListItemIcon
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <AccountCircleIcon
+                  sx={{ width: 56, height: 56 }}
+                  color="primary"
+                />
+              </ListItemIcon>
+              <ListItemText primary="Users" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+            <ListItemButton
+              key="Post"
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : "auto",
-                justifyContent: "center",
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
               }}
+              onClick={loadPosts}
             >
-              <PostAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Post" sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        </List>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <PostAddIcon sx={{ width: 56, height: 56 }} color="primary" />
+              </ListItemIcon>
+              <ListItemText primary="Posts" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </List>
+        </ThemeProvider>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ p: 3 }}>
         <DrawerHeader />
-        <Typography paragraph>
-          <div>
-            <pre>{JSON.stringify(message, null, 2)}</pre>
-          </div>
-        </Typography>
+        {CustomizedTables(message)}
       </Box>
     </Box>
   );
