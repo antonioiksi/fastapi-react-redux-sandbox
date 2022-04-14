@@ -65,17 +65,6 @@ def user_login(user: UserLoginSchema = Body(...)):
     raise HTTPException(status_code=404, detail="user does not exist")
 
 
-@user_router.get("/user/{id}/posts")
-def get_user_posts(id: int):
-    if id == -1:
-        posts = session.query(Posts).all()
-    else:
-        posts = session.query(Posts).filter_by(user_id=id).all()
-
-    logging.info("Get posts from user [%s]", id)
-    return posts
-
-
 @user_router.get("/users")
 def get_users():
     users = session.query(Users).all()

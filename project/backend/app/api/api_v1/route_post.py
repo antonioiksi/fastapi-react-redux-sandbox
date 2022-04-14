@@ -2,7 +2,7 @@ from fastapi import Depends, Request, HTTPException, APIRouter
 from app.db.models.posts import Posts, Session
 from app.core.auth.auth_bearer import JWTBearer
 from app.core.auth.auth_handler import decodeJWT
-from app.db.schemas.posts import PostBase
+from app.db.schemas.posts import PostBase, GetPosts
 from app.db.schemas.users import UserModel
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.db.session import session
@@ -13,7 +13,7 @@ import logging, jwt
 post_router = APIRouter()
 
 
-@post_router.post("/posts", dependencies=[Depends(JWTBearer())])
+@post_router.post("/add_posts", dependencies=[Depends(JWTBearer())])
 def add_post(post: PostBase, request: Request) -> dict:
     token = request.headers.get("Authorization").replace("Bearer ", "")
     if check_session(token):
@@ -35,6 +35,22 @@ def delete_posts(user: UserModel):
     session.commit()
     logging.info("Delete %s posts from user [%s]", count, user.user_id)
     return "delete " + str(count) + " elements"
+
+
+@post_router.get("/post_count")
+def post_count():
+    return session.query(Posts).count()
+
+
+@post_router.post("/posts")
+def get_user_posts(data: GetPosts):
+    sort_by = data.sortby
+    offset = data.offset
+    limit = data.limit
+
+    posts = session.query(Posts).order_by(sort_by).offset(offset).limit(limit).all()
+    logging.info("Get posts!")
+    return posts
 
 
 def check_session(token):

@@ -70,7 +70,7 @@ def init() -> None:
 
         letters = string.ascii_letters
 
-        for i in range(15):
+        for i in range(150):
             add_post(
                 PostBase(
                     title="".join(random.choice(letters) for i in range(10)),

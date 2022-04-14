@@ -112,8 +112,9 @@ export const Home: FC = () => {
 
   const loadPosts = async () => {
     try {
-      const data = await getPosts();
+      const data = await getPosts(5, 0, "id");
       setMessage((message = data));
+      console.log(message);
     } catch (err) {
       setError(String(err));
     }
@@ -242,7 +243,12 @@ export const Home: FC = () => {
       </Drawer>
       <Box component="main" sx={{ p: 3 }}>
         <DrawerHeader />
+        {/* {message.length != 0 ? ( */}
         {CustomizedTables(message)}
+        {/* ) : (
+          // <div>showing item</div>
+          <div>Never showing false item</div>
+        )} */}
       </Box>
     </Box>
   );
