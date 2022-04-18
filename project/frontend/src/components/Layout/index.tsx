@@ -1,29 +1,33 @@
+import {
+  Box,
+  Button,
+  createTheme,
+  CssBaseline,
+  CSSObject,
+  Divider,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  Theme,
+  ThemeProvider,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import React, { FC, useState } from "react";
-import { getUsers, getPosts } from "../utils/api";
-import { styled, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+import MuiDrawer from "@mui/material/Drawer";
+import { getPosts, getUsers } from "../../utils/api/post";
+import theme from "../../config/theme";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PostAddIcon from "@mui/icons-material/PostAdd";
-import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { useNavigate } from "react-router-dom";
-import theme from "../config/theme";
-import CustomizedTables from "./tables/posts";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const drawerWidth = 240;
 
@@ -96,7 +100,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export const Home: FC = () => {
+export const Layout: FC = () => {
   let [message, setMessage] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
@@ -140,7 +144,6 @@ export const Home: FC = () => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -161,7 +164,14 @@ export const Home: FC = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, cursor: "pointer" }}
+              onClick={() => {
+                navigate("/dashboard", { replace: true });
+              }}
+            >
               Fastapi-jwt
             </Typography>
             <ThemeProvider theme={LogOuttheme}>
@@ -170,7 +180,7 @@ export const Home: FC = () => {
                 color="primary"
                 endIcon={<ExitToAppIcon />}
                 onClick={() => {
-                  navigate("/login", { replace: true });
+                  navigate("/", { replace: true });
                 }}
               >
                 Log Out
@@ -202,7 +212,10 @@ export const Home: FC = () => {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={loadUsers}
+              // onClick={loadUsers}
+              onClick={() => {
+                navigate("/dashboard/users", { replace: true });
+              }}
             >
               <ListItemIcon
                 sx={{
@@ -225,7 +238,9 @@ export const Home: FC = () => {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={loadPosts}
+              onClick={() => {
+                navigate("/dashboard/posts", { replace: true });
+              }}
             >
               <ListItemIcon
                 sx={{
@@ -243,12 +258,7 @@ export const Home: FC = () => {
       </Drawer>
       <Box component="main" sx={{ p: 3 }}>
         <DrawerHeader />
-        {/* {message.length != 0 ? ( */}
-        {CustomizedTables(message)}
-        {/* ) : (
-          // <div>showing item</div>
-          <div>Never showing false item</div>
-        )} */}
+        <Outlet />
       </Box>
     </Box>
   );

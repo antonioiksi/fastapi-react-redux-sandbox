@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "@material-ui/lab";
-import { login } from "../utils/auth";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,7 +16,8 @@ import { Avatar, Typography } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import VpnKeySharpIcon from "@mui/icons-material/VpnKeySharp";
 import { useNavigate } from "react-router-dom";
-import theme from "../config/theme";
+import { login } from "../../utils/auth";
+import theme from "../../config/theme";
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(2),
@@ -47,7 +47,7 @@ export const Login: FC = () => {
       const data = await login(email, password);
 
       if (data) {
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
     } catch (err) {
       if (err instanceof Error) {

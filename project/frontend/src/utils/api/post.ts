@@ -1,4 +1,4 @@
-import { BACKEND_URL } from '../config';
+import { BACKEND_URL } from '../../config';
 
 export const getUsers = async () => {
   const response = await fetch(BACKEND_URL + "/users");

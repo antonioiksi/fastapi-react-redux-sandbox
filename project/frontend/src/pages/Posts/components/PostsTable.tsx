@@ -16,8 +16,10 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { getPosts, getPostsCount } from "../../utils/api";
-import useEffect from "react";
+import { getPosts, getPostsCount } from "../../../utils/api/post";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "../../../config/theme";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
@@ -120,7 +122,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-export default function CustomizedTables(message: any[]) {
+export default function CustomizedTables() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tableData, settableData] = React.useState([
@@ -134,7 +136,7 @@ export default function CustomizedTables(message: any[]) {
     {
       id: 2,
       user_id: 1,
-      text: "pdmiGgotsweGHIeiuMKzpmoEcapOTRXssOGOXsKgKfDsnSecJOLOyCDpkjjnrnfDHBjbrebWxXhZpuXzQzqMHOQhrIMnQxrrIVOa",
+      text: "pdmiGgotsweGHIeiuMKzpmoEcapOTR XssOGOXsKgKfDsnSecJOLOyCDpkjj nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu  nrnfDHBjbrebWxXhZpu XzQzqMHOQhrIMnQxrrIVOa",
       create_date: null,
       title: "DBPybhlEJG",
     },
@@ -165,8 +167,8 @@ export default function CustomizedTables(message: any[]) {
   const [postCount, setPostCount] = React.useState(0);
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0;
+  // const emptyRows =
+  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0;
 
   const handleChangePage = async (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -175,7 +177,6 @@ export default function CustomizedTables(message: any[]) {
     setPage((prev) => newPage);
     setPostCount(await getPostsCount());
     settableData(await getPosts(rowsPerPage, newPage * rowsPerPage, "id"));
-    // console.log(`getPosts(${rowsPerPage}, ${newPage * rowsPerPage}, "id")`);
   };
 
   const handleChangeRowsPerPage = async (
@@ -186,79 +187,89 @@ export default function CustomizedTables(message: any[]) {
     settableData(await getPosts(parseInt(event.target.value, 10), 0, "id"));
   };
 
-  if (tableData.length == 0) return <div></div>;
+  if (tableData.length === 0) return <div></div>;
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table" sx={{ minWidth: 500 }}>
-        <TableHead>
-          <StyledTableRow>
-            <StyledTableCell align="center">id</StyledTableCell>
-            <StyledTableCell align="center">Title&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="center">Text&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="center">User id</StyledTableCell>
-            <StyledTableCell align="center">
-              Create dates&nbsp;(g)
-            </StyledTableCell>
-          </StyledTableRow>
-        </TableHead>
-        <TableBody>
-          {tableData
-            // {(rowsPerPage > 0
-            //   ? message.slice(
-            //       page * rowsPerPage,
-            //       page * rowsPerPage + rowsPerPage
-            //     )
-            //   : message
-            .map((row: any) => (
-              <StyledTableRow
-                key={row.id}
+    <ThemeProvider theme={theme}>
+      <TableContainer component={Paper}>
+        <Table
+          aria-label="simple table"
+          sx={{
+            minWidth: 500,
+            [`& .${tableCellClasses.root}`]: {
+              borderBottom: "none",
+            },
+          }}
+        >
+          <TableHead>
+            <StyledTableRow>
+              <StyledTableCell align="center">id</StyledTableCell>
+              <StyledTableCell align="center">Title&nbsp;(g)</StyledTableCell>
+              <StyledTableCell align="center">Text&nbsp;(g)</StyledTableCell>
+              <StyledTableCell align="center">User id</StyledTableCell>
+              <StyledTableCell align="center">
+                Create dates&nbsp;(g)
+              </StyledTableCell>
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            {tableData
+              // {(rowsPerPage > 0
+              //   ? message.slice(
+              //       page * rowsPerPage,
+              //       page * rowsPerPage + rowsPerPage
+              //     )
+              //   : message
+              .map((row: any) => (
+                <StyledTableRow
+                  key={row.id}
 
-                // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <StyledTableCell align="center" component="th" scope="row">
-                  {row.id}
-                </StyledTableCell>
-                <StyledTableCell align="center" style={{ width: 160 }}>
-                  {row.title}
-                </StyledTableCell>
-                <StyledTableCell align="center" style={{ width: 160 }}>
-                  {row.text}
-                </StyledTableCell>
-                <StyledTableCell align="center" style={{ width: 160 }}>
-                  {row.user_id}
-                </StyledTableCell>
-                <StyledTableCell align="center" style={{ width: 160 }}>
-                  {row.create_date}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          {/* {emptyRows > 0 && (
+                  // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <StyledTableCell align="center" component="th" scope="row">
+                    {row.id}
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ width: 160 }}>
+                    {row.title}
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ width: 160 }}>
+                    {row.text}
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ width: 160 }}>
+                    {row.user_id}
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ width: 160 }}>
+                    {row.create_date}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            {/* {emptyRows > 0 && (
             <StyledTableRow style={{ height: 53 * emptyRows }}>
               <StyledTableCell colSpan={6} />
             </StyledTableRow>
           )} */}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
-              count={postCount}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={3}
+                count={postCount}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </ThemeProvider>
   );
 }
