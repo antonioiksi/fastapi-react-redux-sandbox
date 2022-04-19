@@ -19,6 +19,9 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { getPosts, getPostsCount } from "../../../utils/api/post";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../config/theme";
+import Content from "./ModalWindow";
+import ReactDOM from "react-dom";
+import { Modal } from "@material-ui/core";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,6 +32,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
     whiteSpace: "normal",
     wordWrap: "break-word",
+    padding: "normal",
   },
 }));
 
@@ -124,6 +128,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 
 export default function CustomizedTables() {
   const [page, setPage] = React.useState(0);
+  const [selectedRow, setSelectedRow] = React.useState<any>();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tableData, settableData] = React.useState([
     {
@@ -162,6 +167,9 @@ export default function CustomizedTables() {
       title: "lmmFUgzIfe",
     },
   ]);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   // const [tableData, settableData] = React.useState([]);
 
   const [postCount, setPostCount] = React.useState(0);
@@ -187,6 +195,13 @@ export default function CustomizedTables() {
     settableData(await getPosts(parseInt(event.target.value, 10), 0, "id"));
   };
 
+  function setSelectedRow1(id) {
+    // console.log(event.target.textContent);
+    let a = tableData.find((x) => x.id == id);
+    setSelectedRow((selectedRow) => a);
+    handleOpen();
+  }
+
   if (tableData.length === 0) return <div></div>;
   return (
     <ThemeProvider theme={theme}>
@@ -195,6 +210,7 @@ export default function CustomizedTables() {
           aria-label="simple table"
           sx={{
             minWidth: 500,
+            width: "100vh",
             [`& .${tableCellClasses.root}`]: {
               borderBottom: "none",
             },
@@ -221,6 +237,7 @@ export default function CustomizedTables() {
               //   : message
               .map((row: any) => (
                 <StyledTableRow
+                  onClick={(event) => setSelectedRow1(row.id)}
                   key={row.id}
 
                   // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -270,6 +287,16 @@ export default function CustomizedTables() {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Content row={selectedRow} />
+      </Modal>
+
+      {/* <Modal row={selectedRow} open={showModal} onClose={hide} /> */}
     </ThemeProvider>
   );
 }

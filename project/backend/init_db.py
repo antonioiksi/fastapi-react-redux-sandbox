@@ -8,6 +8,7 @@ from starlette.datastructures import Headers
 import configparser
 import string
 import random
+import datetime
 
 INI_FILE = "app/core/config.ini"
 config = configparser.ConfigParser()
@@ -68,14 +69,14 @@ def init() -> None:
 
         valid_token = result["token"].decode("utf8")
 
-        letters = string.ascii_letters
+        letters = string.ascii_letters + "       "
 
         for i in range(150):
             add_post(
                 PostBase(
                     title="".join(random.choice(letters) for i in range(10)),
                     text="".join(random.choice(letters) for i in range(100)),
-                    create_date="123",
+                    create_date=datetime.date.today(),
                 ),
                 build_request(token=valid_token),
             )

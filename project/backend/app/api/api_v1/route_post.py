@@ -6,7 +6,7 @@ from app.db.schemas.posts import PostBase, GetPosts
 from app.db.schemas.users import UserModel
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.db.session import session
-
+from datetime import datetime
 import logging, jwt
 
 
@@ -20,7 +20,12 @@ def add_post(post: PostBase, request: Request) -> dict:
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         user_id = decoded_token["user_id"]
 
-        new_post = Posts(title=post.title, text=post.text, user_id=user_id)
+        new_post = Posts(
+            title=post.title,
+            text=post.text,
+            user_id=user_id,
+            create_date=post.create_date,
+        )
         session.add(new_post)
         session.commit()
         logging.info("Add new post from user [%s]" % (user_id))

@@ -17,10 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
-import { getPosts, getUsers } from "../../utils/api/post";
+import { getPosts } from "../../utils/api/post";
 import theme from "../../config/theme";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -28,6 +28,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { getUsers } from "../../utils/api/user";
 
 const drawerWidth = 240;
 
