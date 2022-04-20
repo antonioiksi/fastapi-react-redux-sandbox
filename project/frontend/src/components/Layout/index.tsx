@@ -178,6 +178,12 @@ export const Layout: FC = () => {
             <ThemeProvider theme={LogOuttheme}>
               <Button
                 variant="contained"
+                sx={{
+                  ":hover": {
+                    bgcolor: "primary.dark",
+                    color: "white",
+                  },
+                }}
                 color="primary"
                 endIcon={<ExitToAppIcon />}
                 onClick={() => {
@@ -257,7 +263,7 @@ export const Layout: FC = () => {
           </List>
         </ThemeProvider>
       </Drawer>
-      <Box component="main" sx={{ p: 3 }}>
+      <Box width="100%" component="main" sx={{ p: 3 }}>
         <DrawerHeader />
         <Outlet />
       </Box>

@@ -33,3 +33,51 @@ export const getPostsCount = async ()   => {
 
   return Promise.reject('Failed to get message from backend');
 }
+
+export const changePost = async (id:any, title:any, text:any, create_date:any )   => {
+
+  const response = await fetch(BACKEND_URL + "/change", {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "id": String(id),
+      "title": String(title),
+      "text": String(text),
+      "create_date": create_date
+    })
+  });
+
+
+  const data = await response.json();
+
+  if (data) {
+    return (data);
+  }
+
+  return Promise.reject('Failed to get message from backend');
+}
+
+export const deletePost = async (id:any)   => {
+
+  const response = await fetch(BACKEND_URL + "/delete", {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "id": String(id),
+    })
+  });
+
+  const data = await response.json();
+
+  if (data) {
+    return (data);
+  }
+
+  return Promise.reject('Failed to get message from backend');
+}

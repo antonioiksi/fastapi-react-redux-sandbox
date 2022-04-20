@@ -1,4 +1,4 @@
-from app.api.api_v1.route_post import add_post, delete_posts
+from app.api.api_v1.route_post import add_post, delete_user_posts
 from app.api.api_v1.route_user import user_login, create_user, delete_user, logout
 from app.db.session import session
 from app.db.models.posts import Session
@@ -10,6 +10,7 @@ from starlette.datastructures import Headers
 
 import unittest
 import configparser
+from datetime import datetime
 
 
 def build_request(
@@ -47,7 +48,8 @@ class TestAddPost(unittest.IsolatedAsyncioTestCase):
     valid_post = PostBase(
         title=config["TEST_POST"]["TITLE"],
         text=config["TEST_POST"]["TEXT"],
-        create_date=config["TEST_POST"]["CREATE_DATE"],
+        create_date=config["TEST_POST"]["CREATE_DATE"]
+        # create_date=datetime.strptime(config["TEST_POST"]["CREATE_DATE"], "%y-%m-%d"),
     )
     valid_token = ""
 
@@ -102,7 +104,7 @@ class TestAddPost(unittest.IsolatedAsyncioTestCase):
         )
         if user_data:
             user = UserModel(user_id=user_data.id)
-            delete_posts(user)
+            delete_user_posts(user)
 
             user_data = session.query(Session).filter_by(user_id=user_data.id).first()
             if user_data:

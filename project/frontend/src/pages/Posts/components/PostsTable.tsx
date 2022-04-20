@@ -130,6 +130,7 @@ export default function CustomizedTables() {
   const [page, setPage] = React.useState(0);
   const [selectedRow, setSelectedRow] = React.useState<any>();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // TODO: Изначальная зарузка данных в таблицу
   const [tableData, settableData] = React.useState([
     {
       id: 1,
@@ -169,14 +170,11 @@ export default function CustomizedTables() {
   ]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  // const [tableData, settableData] = React.useState([]);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [postCount, setPostCount] = React.useState(0);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  // const emptyRows =
-  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0;
 
   const handleChangePage = async (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -210,9 +208,12 @@ export default function CustomizedTables() {
           aria-label="simple table"
           sx={{
             minWidth: 500,
-            width: "100vh",
+            width: "100%",
             [`& .${tableCellClasses.root}`]: {
               borderBottom: "none",
+            },
+            "& .MuiTableRow-root:hover": {
+              backgroundColor: "primary.light",
             },
           }}
         >
@@ -228,42 +229,22 @@ export default function CustomizedTables() {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {tableData
-              // {(rowsPerPage > 0
-              //   ? message.slice(
-              //       page * rowsPerPage,
-              //       page * rowsPerPage + rowsPerPage
-              //     )
-              //   : message
-              .map((row: any) => (
-                <StyledTableRow
-                  onClick={(event) => setSelectedRow1(row.id)}
-                  key={row.id}
-
-                  // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <StyledTableCell align="center" component="th" scope="row">
-                    {row.id}
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ width: 160 }}>
-                    {row.title}
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ width: 160 }}>
-                    {row.text}
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ width: 160 }}>
-                    {row.user_id}
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ width: 160 }}>
-                    {row.create_date}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            {/* {emptyRows > 0 && (
-            <StyledTableRow style={{ height: 53 * emptyRows }}>
-              <StyledTableCell colSpan={6} />
-            </StyledTableRow>
-          )} */}
+            {tableData.map((row: any) => (
+              <StyledTableRow
+                onClick={(event) => setSelectedRow1(row.id)}
+                key={row.id}
+              >
+                <StyledTableCell align="center" component="th" scope="row">
+                  {row.id}
+                </StyledTableCell>
+                <StyledTableCell align="center">{row.title}</StyledTableCell>
+                <StyledTableCell align="center">{row.text}</StyledTableCell>
+                <StyledTableCell align="center">{row.user_id}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {row.create_date}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -293,10 +274,17 @@ export default function CustomizedTables() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Content row={selectedRow} />
+        {/* TODO:: возможно следует по другому обновлять таблицу */}
+        <Content
+          row={selectedRow}
+          SetOpen={setOpen}
+          getPosts={getPosts}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          column={"id"}
+          settableData={settableData}
+        />
       </Modal>
-
-      {/* <Modal row={selectedRow} open={showModal} onClose={hide} /> */}
     </ThemeProvider>
   );
 }

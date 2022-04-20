@@ -2,7 +2,7 @@ from fastapi import Depends, Request, HTTPException, APIRouter
 from app.db.models.posts import Posts, Session
 from app.core.auth.auth_bearer import JWTBearer
 from app.core.auth.auth_handler import decodeJWT
-from app.db.schemas.posts import PostBase, GetPosts
+from app.db.schemas.posts import PostBase, GetPosts, PostChange, PostDelete
 from app.db.schemas.users import UserModel
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.db.session import session
@@ -34,12 +34,34 @@ def add_post(post: PostBase, request: Request) -> dict:
     raise HTTPException(status_code=401, detail="invalid token")
 
 
-@post_router.post("/delete")
-def delete_posts(user: UserModel):
+@post_router.post("/user_delete")
+def delete_user_posts(user: UserModel):
     count = session.query(Posts).filter(Posts.user_id == user.user_id).delete()
     session.commit()
     logging.info("Delete %s posts from user [%s]", count, user.user_id)
     return "delete " + str(count) + " elements"
+
+
+@post_router.post("/delete")
+def delete_user_posts(data: PostDelete):
+    session.query(Posts).filter(Posts.id == data.id).delete()
+    session.commit()
+    logging.info("Delete posts")
+    return "delete posts"
+
+
+@post_router.post("/change")
+def update_posts(data: PostChange):
+    post = session.query(Posts).filter(Posts.id == data.id).first()
+
+    post.title = data.title
+    post.text = data.text
+    post.create_date = data.create_date
+
+    session.commit()
+
+    logging.info("Update post[%s]", data.id)
+    return "Done! Post update."
 
 
 @post_router.get("/post_count")

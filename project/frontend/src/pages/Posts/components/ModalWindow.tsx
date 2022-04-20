@@ -5,6 +5,8 @@ import { TextField } from "@material-ui/core";
 import { Button, Stack } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { changePost, deletePost } from "../../../utils/api/post";
+import { useNavigate } from "react-router";
 
 const style = {
   position: "absolute" as "absolute",
@@ -19,6 +21,61 @@ const style = {
 };
 
 export default function BasicModal(props) {
+  const [textfield_title, settextfield_title] = React.useState(props.row.title);
+  // TODO: дата из бд приходит с минутами и секундами
+  const [textfield_create_date, settextfield_create_date] = React.useState(
+    props.row.create_date
+  );
+  const [textfield_user_id, settextfield_user_id] = React.useState(
+    props.row.user_id
+  );
+  const [textfield_text, settextfield_text] = React.useState(props.row.text);
+
+  const handleTitleInputChange = (event) => {
+    settextfield_title(event.target.value);
+  };
+  const handleCreateDateInputChange = (event) => {
+    settextfield_create_date(event.target.value);
+  };
+  const handleUserIdInputChange = (event) => {
+    settextfield_user_id(event.target.value);
+  };
+  const handleTextInputChange = (event) => {
+    settextfield_text(event.target.value);
+  };
+
+  const handleChangePost = async () => {
+    changePost(
+      props.row.id,
+      textfield_title,
+      textfield_text,
+      textfield_create_date
+    );
+
+    let data = await props.getPosts(
+      props.rowsPerPage,
+      props.page * props.rowsPerPage,
+      props.column
+    );
+
+    props.settableData(data);
+
+    props.SetOpen(false);
+  };
+
+  const handleExit = async () => {
+    await deletePost(props.row.id);
+
+    let data = await props.getPosts(
+      props.rowsPerPage,
+      props.page * props.rowsPerPage,
+      props.column
+    );
+
+    props.settableData(data);
+    props.SetOpen(false);
+  };
+
   return (
     <Box sx={style}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -26,21 +83,24 @@ export default function BasicModal(props) {
           <TextField
             id="title"
             label="title"
-            defaultValue={props.row.title}
             variant="outlined"
+            value={textfield_title}
+            onChange={handleTitleInputChange}
           />
 
           <TextField
             id="create_date"
-            defaultValue={props.row.create_date}
             variant="outlined"
             type="date"
+            value={textfield_create_date}
+            onChange={handleCreateDateInputChange}
           />
           <TextField
             id="user_id"
             label="user id"
-            defaultValue={props.row.user_id}
             variant="outlined"
+            value={textfield_user_id}
+            onChange={handleUserIdInputChange}
           />
         </Stack>
         <Stack spacing={2} direction="row" justifyContent="center" mt={2}>
@@ -48,9 +108,10 @@ export default function BasicModal(props) {
             fullWidth
             id="text"
             label="text"
-            defaultValue={props.row.text}
             variant="outlined"
             placeholder="Placeholder"
+            value={textfield_text}
+            onChange={handleTextInputChange}
             multiline
           />
         </Stack>
@@ -60,14 +121,16 @@ export default function BasicModal(props) {
             color="error"
             size="large"
             startIcon={<CancelIcon />}
+            onClick={handleExit}
           >
-            Отмена
+            Удалить
           </Button>
           <Button
             variant="contained"
             color="primary"
             size="large"
             startIcon={<SaveIcon />}
+            onClick={handleChangePost}
           >
             Применить
           </Button>

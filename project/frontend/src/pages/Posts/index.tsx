@@ -5,11 +5,7 @@ import Modal from "./components/ModalWindow";
 
 class Posts extends Component {
   render() {
-    return (
-      <div>
-        <CustomizedTable />
-      </div>
-    );
+    return <CustomizedTable />;
   }
 }
 
