@@ -40,7 +40,7 @@ tests: migrate
 	docker exec -it project_backend_1 python -m unittest discover -s app/tests/Unittest -v
 
 test-one: migrate
-	docker exec -it project_backend_1 python -m unittest app/tests/Unittest/testUserLogout.py -v
+	docker exec -it project_backend_1 python -m unittest app/tests/Unittest/testAddPost.py -v
 
 initial-db:
 	docker exec -i project_backend_1 bash -c "python init_db.py"

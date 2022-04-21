@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Body
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.core.auth.auth_handler import signJWT
+from app.core.auth.auth_handler import decodeJWT
+from app.db.models.posts import Session
+from app.db.session import session
 
 
 import logging
@@ -20,3 +23,13 @@ def update_token(token: str = Body(...)):
     user_id = decoded_token["user_id"]
     logging.info("Update token for user [%s]", user_id)
     return signJWT(user_id)
+
+
+def check_session(token):
+    try:
+        decodeJWT(token)
+        if session.query(Session).filter_by(token=token).first():
+            return True
+    except:
+        return False
+    return False

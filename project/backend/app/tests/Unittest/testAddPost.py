@@ -102,8 +102,10 @@ class TestAddPost(unittest.IsolatedAsyncioTestCase):
             .filter_by(fullname=self.config["TEST_USER"]["FULLNAME"])
             .first()
         )
+
         if user_data:
             user = UserModel(user_id=user_data.id)
+
             delete_user_posts(user)
 
             user_data = session.query(Session).filter_by(user_id=user_data.id).first()

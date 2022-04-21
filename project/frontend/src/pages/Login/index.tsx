@@ -134,6 +134,7 @@ export const Login: FC = () => {
             </Grid>
             <Grid container alignItems="center" justify="space-between">
               <Grid item>
+                {/* TODO: запомнить меня не реализовано */}
                 <FormControlLabel
                   control={<Checkbox color="primary" />}
                   label="Remember me"

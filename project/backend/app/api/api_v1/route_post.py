@@ -1,13 +1,13 @@
 from fastapi import Depends, Request, HTTPException, APIRouter
-from app.db.models.posts import Posts, Session
+from app.db.models.posts import Posts
 from app.core.auth.auth_bearer import JWTBearer
-from app.core.auth.auth_handler import decodeJWT
 from app.db.schemas.posts import PostBase, GetPosts, PostChange, PostDelete
 from app.db.schemas.users import UserModel
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.db.session import session
-from datetime import datetime
 import logging, jwt
+
+from .route_common import check_session
 
 
 post_router = APIRouter()
@@ -43,7 +43,7 @@ def delete_user_posts(user: UserModel):
 
 
 @post_router.post("/delete")
-def delete_user_posts(data: PostDelete):
+def delete_posts(data: PostDelete):
     session.query(Posts).filter(Posts.id == data.id).delete()
     session.commit()
     logging.info("Delete posts")
@@ -78,13 +78,3 @@ def get_user_posts(data: GetPosts):
     posts = session.query(Posts).order_by(sort_by).offset(offset).limit(limit).all()
     logging.info("Get posts!")
     return posts
-
-
-def check_session(token):
-    try:
-        decodeJWT(token)
-        if session.query(Session).filter_by(token=token).first():
-            return True
-    except:
-        return False
-    return False
