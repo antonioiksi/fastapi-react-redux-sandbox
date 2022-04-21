@@ -1,5 +1,5 @@
 from fastapi import Body, Depends, Request, HTTPException, APIRouter
-from app.db.models.posts import Posts, Session
+from app.db.models.session import Session
 from app.db.models.users import Users
 from app.db.schemas.users import UserBase, UserLoginSchema
 from app.core.auth.auth_bearer import JWTBearer

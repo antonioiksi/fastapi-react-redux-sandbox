@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.core.auth.auth_handler import signJWT
 from app.core.auth.auth_handler import decodeJWT
-from app.db.models.posts import Session
+from app.db.models.session import Session
 from app.db.session import session
 
 

@@ -1,5 +1,5 @@
 from app.db.schemas.users import UserBase, UserLoginSchema
-from app.api.api_v1.route_user import create_user, user_login, logout
+from app.api.api_v1.route_user import create_user, user_login
 from app.api.api_v1.route_post import add_post
 from fastapi import Request
 from app.db.schemas.posts import PostBase

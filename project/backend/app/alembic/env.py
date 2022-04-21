@@ -22,21 +22,13 @@ def get_url():
 # add your model's MetaData object here
 # for 'autogenerate' support
 # target_metadata = None
-from sqlalchemy import engine_from_config, pool, MetaData
-from db.models import posts, users
+from sqlalchemy import engine_from_config, pool
+from db.session import Base
 
+# TODO: Найти возможность избежать импорта
+from db.models import posts, users, events, session
 
-def combine_metadata(*args):
-    m = MetaData()
-    for metadata in args:
-        for t in metadata.tables.values():
-            t.tometadata(m)
-    return m
-
-
-target_metadata = combine_metadata(posts.Base.metadata, users.Base.metadata)
-
-# target_metadata = model.Base.metadata
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
