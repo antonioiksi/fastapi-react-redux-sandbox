@@ -89,6 +89,17 @@ def logout(request: Request):
         raise HTTPException(status_code=404, detail="session does not found")
 
 
+@user_router.get("/info", dependencies=[Depends(JWTBearer())])
+def info(request: Request):
+    token = request.headers.get("Authorization").replace("Bearer ", "")
+    decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    user_id = decoded_token["user_id"]
+
+    user = session.query(Users).filter_by(id=user_id).first()
+
+    return user
+
+
 # @user_router.get("/delete", dependencies=[Depends(JWTBearer())], tags=["user"])
 def delete_user(fullname):
     if session.query(Users).filter_by(fullname=fullname).first():

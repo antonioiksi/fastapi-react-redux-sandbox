@@ -16,11 +16,11 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { getPosts, getPostsCount } from "../../../utils/api/post";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "../../../config/theme";
-import Content from "./ModalWindow";
-import { Modal, Typography } from "@material-ui/core";
+import theme from "../../../../config/theme";
+import { getEvents, getEventsCount } from "../../../../utils/api/event";
+import { Typography } from "@mui/material";
+import { getPosts, getPostsCount } from "../../../../utils";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -105,7 +105,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
-        // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
         {theme.direction === "rtl" ? (
@@ -126,33 +126,16 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 }
 
 interface Provider {
-  title: string;
-  create_date: string;
   id: string;
   text: string;
   user_id: string;
+  date: string;
 }
 
 export default function CustomizedTables() {
   const [page, setPage] = React.useState(0);
-  const [selectedRow, setSelectedRow] = React.useState<any>();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tableData, settableData] = React.useState<Provider[]>([]);
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  React.useEffect(() => {
-    async function fetchMyAPI() {
-      try {
-        setPostCount(await getPostsCount());
-        settableData(await getPosts(rowsPerPage, page * rowsPerPage, "id"));
-      } catch {}
-    }
-    fetchMyAPI();
-  });
 
   const [postCount, setPostCount] = React.useState(0);
 
@@ -161,8 +144,8 @@ export default function CustomizedTables() {
     newPage: number
   ) => {
     setPage((prev) => newPage);
-    setPostCount(await getPostsCount());
-    settableData(await getPosts(rowsPerPage, newPage * rowsPerPage, "id"));
+    setPostCount(await getEventsCount());
+    settableData(await getEvents(rowsPerPage, newPage * rowsPerPage, "id"));
   };
 
   const handleChangeRowsPerPage = async (
@@ -170,20 +153,26 @@ export default function CustomizedTables() {
   ) => {
     setRowsPerPage((prev) => parseInt(event.target.value, 10));
     setPage(0);
-    settableData(await getPosts(parseInt(event.target.value, 10), 0, "id"));
+    settableData(await getEvents(parseInt(event.target.value, 10), 0, "id"));
   };
 
-  function setSelectedRow1(id) {
-    let a = tableData.find((x) => x.id == id);
-    setSelectedRow((selectedRow) => a);
-    handleOpen();
-  }
+  React.useEffect(() => {
+    async function fetchMyAPI() {
+      try {
+        setPostCount(await getEventsCount());
+        settableData(await getEvents(rowsPerPage, page * rowsPerPage, "id"));
+      } catch {}
+    }
+    fetchMyAPI();
+  });
 
   if (tableData.length === 0) return <div></div>;
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex" flexDirection="column" alignItems="center">
-        <Typography>Posts table</Typography>
+        <Typography variant="h6" marginBottom={3}>
+          Events table
+        </Typography>
         <TableContainer component={Paper}>
           <Table
             aria-label="simple table"
@@ -193,39 +182,29 @@ export default function CustomizedTables() {
               [`& .${tableCellClasses.root}`]: {
                 borderBottom: "none",
               },
-              "& .MuiTableRow-root:hover": {
-                backgroundColor: "primary.light",
-              },
             }}
           >
             <TableHead>
               <StyledTableRow>
-                <StyledTableCell align="center">id</StyledTableCell>
-                <StyledTableCell align="center">Title&nbsp;(g)</StyledTableCell>
+                <StyledTableCell align="center">Id</StyledTableCell>
                 <StyledTableCell align="center">Text&nbsp;(g)</StyledTableCell>
-                <StyledTableCell align="center">User id</StyledTableCell>
                 <StyledTableCell align="center">
-                  Create dates&nbsp;(g)
+                  User_id&nbsp;(g)
                 </StyledTableCell>
+                <StyledTableCell align="center">Date</StyledTableCell>
               </StyledTableRow>
             </TableHead>
             <TableBody>
               {tableData.map((row: any) => (
-                <StyledTableRow
-                  onClick={(event) => setSelectedRow1(row.id)}
-                  key={row.id}
-                >
+                <StyledTableRow key={row.id}>
                   <StyledTableCell align="center" component="th" scope="row">
                     {row.id}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.title}</StyledTableCell>
                   <StyledTableCell align="center">{row.text}</StyledTableCell>
                   <StyledTableCell align="center">
                     {row.user_id}
                   </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.create_date}
-                  </StyledTableCell>
+                  <StyledTableCell align="center">{row.date}</StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
@@ -249,23 +228,6 @@ export default function CustomizedTables() {
             </TableFooter>
           </Table>
         </TableContainer>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          {/* TODO:: возможно следует по другому обновлять таблицу */}
-          <Content
-            row={selectedRow}
-            SetOpen={setOpen}
-            getPosts={getPosts}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            column={"id"}
-            settableData={settableData}
-          />
-        </Modal>
       </Box>
     </ThemeProvider>
   );

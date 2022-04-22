@@ -1,7 +1,7 @@
 from fastapi import Depends, Request, HTTPException, APIRouter
 from app.db.models.events import Events
 from app.core.auth.auth_bearer import JWTBearer
-from app.db.schemas.events import EventBase, DeleteEventsByUser
+from app.db.schemas.events import EventBase, DeleteEventsByUser, GetEvents
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.db.session import session
 import logging, jwt
@@ -33,11 +33,15 @@ def add_event(data: EventBase, request: Request) -> dict:
     raise HTTPException(status_code=401, detail="invalid token")
 
 
-@event_router.get("/events")
-def get_events():
-    posts = session.query(Events).all()
-    logging.info("Get posts!")
-    return posts
+@event_router.post("/events")
+def get_events(data: GetEvents):
+    sort_by = data.sortby
+    offset = data.offset
+    limit = data.limit
+
+    events = session.query(Events).order_by(sort_by).offset(offset).limit(limit).all()
+    logging.info("Get events!")
+    return events
 
 
 @event_router.post("/events_delete")
@@ -46,3 +50,8 @@ def delete_events_byuser(data: DeleteEventsByUser):
     session.commit()
     logging.info("Delete %s events from user [%s]", count, data.user_id)
     return "delete " + str(count) + " elements"
+
+
+@event_router.get("/events_count")
+def post_count():
+    return session.query(Events).count()

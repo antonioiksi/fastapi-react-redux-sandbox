@@ -10,13 +10,15 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
   styled,
   Theme,
   ThemeProvider,
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
@@ -29,7 +31,8 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { getUsers } from "../../utils/api/user";
-
+import { PersonAdd, Settings } from "@material-ui/icons";
+import { useLocation } from "react-router-dom";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -102,28 +105,10 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export const Layout: FC = () => {
-  let [message, setMessage] = useState<any[]>([]);
-  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
-
-  const loadUsers = async () => {
-    try {
-      const data = await getUsers();
-      setMessage((message = data));
-    } catch (err) {
-      setError(String(err));
-    }
-  };
-
-  const loadPosts = async () => {
-    try {
-      const data = await getPosts(5, 0, "id");
-      setMessage((message = data));
-      console.log(message);
-    } catch (err) {
-      setError(String(err));
-    }
-  };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openUserMenu = Boolean(anchorEl);
+  const [info, setInfo] = useState("");
 
   const LogOuttheme = createTheme({
     palette: {
@@ -137,6 +122,15 @@ export const Layout: FC = () => {
   });
 
   const [open, setOpen] = React.useState(false);
+  const { state } = useLocation();
+
+  useEffect(() => {
+    try {
+      // TODO: выдает ошибку, но при этом работает
+      // @ts-ignore
+      setInfo(state.token);
+    } catch {}
+  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -144,6 +138,13 @@ export const Layout: FC = () => {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
   return (
     <Box sx={{ display: "flex" }}>
@@ -219,10 +220,7 @@ export const Layout: FC = () => {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              // onClick={loadUsers}
-              onClick={() => {
-                navigate("/dashboard/users", { replace: true });
-              }}
+              onClick={handleClick}
             >
               <ListItemIcon
                 sx={{
@@ -230,6 +228,7 @@ export const Layout: FC = () => {
                   mr: open ? 3 : "auto",
                   justifyContent: "center",
                 }}
+                // onClick={handleClick}
               >
                 <AccountCircleIcon
                   sx={{ width: 56, height: 56 }}
@@ -238,6 +237,38 @@ export const Layout: FC = () => {
               </ListItemIcon>
               <ListItemText primary="Users" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={openUserMenu}
+              onClose={handleClose}
+              onClick={handleClose}
+              // transformOrigin={{ horizontal: "left", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "top" }}
+            >
+              <MenuItem
+                onClick={() => {
+                  navigate("/dashboard/users/info", {
+                    state: { token: info },
+                  });
+                }}
+              >
+                <ListItemIcon>
+                  <PersonAdd fontSize="small" />
+                </ListItemIcon>
+                Account info
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  navigate("/dashboard/users/events", { replace: true });
+                }}
+              >
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Events
+              </MenuItem>
+            </Menu>
             <ListItemButton
               key="Post"
               sx={{

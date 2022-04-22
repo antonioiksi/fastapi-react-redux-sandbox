@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import date
 
 Base = declarative_base()
 
@@ -25,5 +24,20 @@ class DeleteEventsByUser(BaseModel):
         schema_extra = {
             "example": {
                 "user_id": "1",
+            }
+        }
+
+
+class GetEvents(BaseModel):
+    limit: str
+    offset: str
+    sortby: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "limit": "10",
+                "offset": "0",
+                "sortby": "id",
             }
         }

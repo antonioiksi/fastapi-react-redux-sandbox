@@ -33,7 +33,7 @@ class GetPosts(BaseModel):
         schema_extra = {
             "example": {
                 "limit": "10",
-                "offset": "5",
-                "sortby": "title",
+                "offset": "0",
+                "sortby": "id",
             }
         }

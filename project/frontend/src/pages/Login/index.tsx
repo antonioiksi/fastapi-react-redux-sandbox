@@ -47,7 +47,7 @@ export const Login: FC = () => {
       const data = await login(email, password);
 
       if (data) {
-        navigate("/dashboard", { replace: true });
+        navigate("/dashboard", { state: { token: data.token } });
       }
     } catch (err) {
       if (err instanceof Error) {
