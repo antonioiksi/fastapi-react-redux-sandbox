@@ -228,7 +228,6 @@ export const Layout: FC = () => {
                   mr: open ? 3 : "auto",
                   justifyContent: "center",
                 }}
-                // onClick={handleClick}
               >
                 <AccountCircleIcon
                   sx={{ width: 56, height: 56 }}
@@ -243,7 +242,6 @@ export const Layout: FC = () => {
               open={openUserMenu}
               onClose={handleClose}
               onClick={handleClose}
-              // transformOrigin={{ horizontal: "left", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "top" }}
             >
               <MenuItem
@@ -277,7 +275,9 @@ export const Layout: FC = () => {
                 px: 2.5,
               }}
               onClick={() => {
-                navigate("/dashboard/posts", { replace: true });
+                navigate("/dashboard/posts", {
+                  state: { token: info },
+                });
               }}
             >
               <ListItemIcon
@@ -296,6 +296,7 @@ export const Layout: FC = () => {
       </Drawer>
       <Box width="100%" component="main" sx={{ p: 3 }}>
         <DrawerHeader />
+
         <Outlet />
       </Box>
     </Box>

@@ -10,7 +10,9 @@ import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
+import TablePagination, {
+  tablePaginationClasses,
+} from "@mui/material/TablePagination";
 import IconButton from "@mui/material/IconButton";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -21,6 +23,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../config/theme";
 import Content from "./ModalWindow";
 import { Modal, Typography } from "@material-ui/core";
+import Message from "../../../components/Alert";
+import { Stack } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -105,7 +109,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
-        // disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
         {theme.direction === "rtl" ? (
@@ -139,10 +143,18 @@ export default function CustomizedTables() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tableData, settableData] = React.useState<Provider[]>([]);
   const [open, setOpen] = React.useState(false);
+  const [postCount, setPostCount] = React.useState(0);
+
+  const [openmsg, setOpenmsg] = React.useState(false);
+  const [textmsg, setTextmsg] = React.useState("start");
+  const [typemsg, setTypemsg] = React.useState("success");
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
   };
+
+  const emptyRows = page > 0 ? Math.max(0, rowsPerPage - tableData.length) : 0;
 
   React.useEffect(() => {
     async function fetchMyAPI() {
@@ -152,9 +164,7 @@ export default function CustomizedTables() {
       } catch {}
     }
     fetchMyAPI();
-  });
-
-  const [postCount, setPostCount] = React.useState(0);
+  }, []);
 
   const handleChangePage = async (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -224,17 +234,31 @@ export default function CustomizedTables() {
                     {row.user_id}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {row.create_date}
+                    {row.create_date.split("T")[0]}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
+              {emptyRows > 0 && (
+                <StyledTableRow style={{ height: 53 * emptyRows }}>
+                  <StyledTableCell />
+                </StyledTableRow>
+              )}
             </TableBody>
+
             <TableFooter>
               <TablePagination
+                sx={{
+                  [`& .${tablePaginationClasses.spacer}`]: {
+                    display: "none",
+                  },
+                  [`& .${tablePaginationClasses.toolbar}`]: {
+                    justifyContent: "center",
+                  },
+                }}
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
                 count={postCount}
                 rowsPerPage={rowsPerPage}
+                colSpan={0}
                 page={page}
                 SelectProps={{
                   inputProps: {
@@ -249,23 +273,31 @@ export default function CustomizedTables() {
             </TableFooter>
           </Table>
         </TableContainer>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+        <Modal open={open} onClose={handleClose}>
           {/* TODO:: возможно следует по другому обновлять таблицу */}
-          <Content
-            row={selectedRow}
-            SetOpen={setOpen}
-            getPosts={getPosts}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            column={"id"}
-            settableData={settableData}
-          />
+          <div>
+            <Content
+              row={selectedRow}
+              SetOpen={setOpen}
+              getPosts={getPosts}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              column={"id"}
+              settableData={settableData}
+              setOpenmsg={setOpenmsg}
+              setTextmsg={setTextmsg}
+              setTypemsg={setTypemsg}
+            />
+          </div>
         </Modal>
+        {openmsg && (
+          <Message
+            Message={textmsg}
+            showing={openmsg}
+            setOpenmsg={setOpenmsg}
+            type={typemsg}
+          />
+        )}
       </Box>
     </ThemeProvider>
   );

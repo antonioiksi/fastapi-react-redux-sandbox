@@ -47,6 +47,7 @@ export const Login: FC = () => {
       const data = await login(email, password);
 
       if (data) {
+        localStorage.setItem("token", data.token);
         navigate("/dashboard", { state: { token: data.token } });
       }
     } catch (err) {
@@ -132,7 +133,7 @@ export const Login: FC = () => {
                 </Grid>
               )}
             </Grid>
-            <Grid container alignItems="center" justify="space-between">
+            <Grid container alignItems="center" justifyContent="space-between">
               <Grid item>
                 {/* TODO: запомнить меня не реализовано */}
                 <FormControlLabel
@@ -141,7 +142,11 @@ export const Login: FC = () => {
                 />
               </Grid>
             </Grid>
-            <Grid container justify="center" className={classes.marginTop}>
+            <Grid
+              container
+              justifyContent="center"
+              className={classes.marginTop}
+            >
               <Button
                 variant="contained"
                 color="primary"

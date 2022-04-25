@@ -16,6 +16,10 @@ import Grid3x3Icon from "@mui/icons-material/Grid3x3";
 import KeyIcon from "@mui/icons-material/Key";
 import HomeIcon from "@mui/icons-material/Home";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
+import Message from "../../../components/Alert";
+
+<Message Message={"Test text"} />;
+
 export default function Users() {
   const { state } = useLocation();
   const [info, setInfo] = useState({
@@ -29,13 +33,12 @@ export default function Users() {
   useEffect(() => {
     async function fetchMyAPI() {
       try {
-        // @ts-ignore
-        const data = await getUserInfo(state.token);
+        const data = await getUserInfo(localStorage.getItem("token"));
         setInfo(data);
       } catch {}
     }
     fetchMyAPI();
-  });
+  }, []);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">

@@ -10,7 +10,9 @@ import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
+import TablePagination, {
+  tablePaginationClasses,
+} from "@mui/material/TablePagination";
 import IconButton from "@mui/material/IconButton";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -20,7 +22,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../../config/theme";
 import { getEvents, getEventsCount } from "../../../../utils/api/event";
 import { Typography } from "@mui/material";
-import { getPosts, getPostsCount } from "../../../../utils";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -156,6 +157,8 @@ export default function CustomizedTables() {
     settableData(await getEvents(parseInt(event.target.value, 10), 0, "id"));
   };
 
+  const emptyRows = page > 0 ? Math.max(0, rowsPerPage - tableData.length) : 0;
+
   React.useEffect(() => {
     async function fetchMyAPI() {
       try {
@@ -164,7 +167,7 @@ export default function CustomizedTables() {
       } catch {}
     }
     fetchMyAPI();
-  });
+  }, []);
 
   if (tableData.length === 0) return <div></div>;
   return (
@@ -204,14 +207,29 @@ export default function CustomizedTables() {
                   <StyledTableCell align="center">
                     {row.user_id}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.date}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.date.split("T")[0]}
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
+              {emptyRows > 0 && (
+                <StyledTableRow style={{ height: 53 * emptyRows }}>
+                  <StyledTableCell />
+                </StyledTableRow>
+              )}
             </TableBody>
             <TableFooter>
               <TablePagination
+                sx={{
+                  [`& .${tablePaginationClasses.spacer}`]: {
+                    display: "none",
+                  },
+                  [`& .${tablePaginationClasses.toolbar}`]: {
+                    justifyContent: "center",
+                  },
+                }}
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
+                colSpan={0}
                 count={postCount}
                 rowsPerPage={rowsPerPage}
                 page={page}
