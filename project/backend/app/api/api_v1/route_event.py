@@ -5,6 +5,7 @@ from app.db.schemas.events import EventBase, DeleteEventsByUser, GetEvents
 from app.core.config import JWT_SECRET, JWT_ALGORITHM
 from app.db.session import session
 import logging, jwt
+from sqlalchemy import desc
 
 from datetime import datetime
 from .route_common import check_session
@@ -39,7 +40,9 @@ def get_events(data: GetEvents):
     offset = data.offset
     limit = data.limit
 
-    events = session.query(Events).order_by(sort_by).offset(offset).limit(limit).all()
+    events = (
+        session.query(Events).order_by(desc(sort_by)).offset(offset).limit(limit).all()
+    )
     logging.info("Get events!")
     return events
 

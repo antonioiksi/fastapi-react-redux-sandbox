@@ -48,7 +48,7 @@ export const Login: FC = () => {
 
       if (data) {
         localStorage.setItem("token", data.token);
-        navigate("/dashboard", { state: { token: data.token } });
+        navigate("/dashboard");
       }
     } catch (err) {
       if (err instanceof Error) {

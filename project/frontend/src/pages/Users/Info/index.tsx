@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
 import { getUserInfo } from "../../../utils/api/user";
 
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -21,7 +20,6 @@ import Message from "../../../components/Alert";
 <Message Message={"Test text"} />;
 
 export default function Users() {
-  const { state } = useLocation();
   const [info, setInfo] = useState({
     fullname: "load",
     password: "load",

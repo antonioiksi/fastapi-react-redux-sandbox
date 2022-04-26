@@ -22,8 +22,6 @@ const style = {
 };
 
 export default function BasicModal(props) {
-  const { state } = useLocation();
-
   const [textfield_title, settextfield_title] = React.useState(props.row.title);
   // TODO: дата из бд приходит с минутами и секундами
   const [textfield_create_date, settextfield_create_date] = React.useState(
@@ -47,9 +45,8 @@ export default function BasicModal(props) {
     settextfield_text(event.target.value);
   };
 
-  const Alert = (type, text) => {
-    // @ts-ignore
-    addEvent(state.token, text);
+  const Alert = async (type, text) => {
+    await addEvent(localStorage.getItem("token"), text);
 
     props.setOpenmsg(true);
     props.setTextmsg(text);

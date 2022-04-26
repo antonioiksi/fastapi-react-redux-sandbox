@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Layout } from "./components/Layout";
+import { Layout } from "./components/UserLayout";
 import { Login } from "./pages/Login";
 
 import PageNotFound from "./pages/PageNotFound";

@@ -18,11 +18,11 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+
 import React, { FC, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
-import { getPosts } from "../../utils/api/post";
 import theme from "../../config/theme";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -30,9 +30,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { getUsers } from "../../utils/api/user";
 import { PersonAdd, Settings } from "@material-ui/icons";
-import { useLocation } from "react-router-dom";
+import { logout } from "../../utils/api/user";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -108,7 +107,7 @@ export const Layout: FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openUserMenu = Boolean(anchorEl);
-  const [info, setInfo] = useState("");
+  const [info, setInfo] = useState<any | null>("");
 
   const LogOuttheme = createTheme({
     palette: {
@@ -122,14 +121,18 @@ export const Layout: FC = () => {
   });
 
   const [open, setOpen] = React.useState(false);
-  const { state } = useLocation();
+  const [timeLeft, setTimeLeft] = useState(100);
 
   useEffect(() => {
-    try {
-      // TODO: выдает ошибку, но при этом работает
-      // @ts-ignore
-      setInfo(state.token);
-    } catch {}
+    if (localStorage.getItem("token") && timeLeft > 0) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+
+      console.log(timeLeft);
+    } else {
+      navigate("/", { replace: true });
+    }
   });
 
   const handleDrawerOpen = () => {
@@ -145,6 +148,12 @@ export const Layout: FC = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = (token) => {
+    logout(localStorage.getItem("token"));
+    localStorage.removeItem("token");
+    navigate("/", { replace: true });
   };
   return (
     <Box sx={{ display: "flex" }}>
@@ -187,9 +196,7 @@ export const Layout: FC = () => {
                 }}
                 color="primary"
                 endIcon={<ExitToAppIcon />}
-                onClick={() => {
-                  navigate("/", { replace: true });
-                }}
+                onClick={handleLogout}
               >
                 Log Out
               </Button>
@@ -275,9 +282,7 @@ export const Layout: FC = () => {
                 px: 2.5,
               }}
               onClick={() => {
-                navigate("/dashboard/posts", {
-                  state: { token: info },
-                });
+                navigate("/dashboard/posts");
               }}
             >
               <ListItemIcon
