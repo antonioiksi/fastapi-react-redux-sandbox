@@ -16,8 +16,10 @@ import { Avatar, Typography } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import VpnKeySharpIcon from "@mui/icons-material/VpnKeySharp";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../utils/auth";
+import { login } from "../../api/auth";
 import theme from "../../config/theme";
+import jwt_decode from "jwt-decode";
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(2),
@@ -47,7 +49,10 @@ export const Login: FC = () => {
       const data = await login(email, password);
 
       if (data) {
+        let expire = jwt_decode<object>(data.token)["expire"];
+
         localStorage.setItem("token", data.token);
+        localStorage.setItem("expire", expire as string);
         navigate("/dashboard");
       }
     } catch (err) {

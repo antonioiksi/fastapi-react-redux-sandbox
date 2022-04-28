@@ -1,7 +1,8 @@
-import { BACKEND_URL } from '../../config';
+import { BACKEND_URL } from '../config';
+import { backendFetch } from '../utils/backend_fetch';
 
 export const getPosts = async (limit:any, offset:any, sortby:any)   => {
-  const response = await fetch(BACKEND_URL + "/posts", {
+  const response = await backendFetch(BACKEND_URL + "/posts", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -23,7 +24,7 @@ export const getPosts = async (limit:any, offset:any, sortby:any)   => {
   return Promise.reject('Failed to get message from backend');
 }
 export const getPostsCount = async ()   => {
-  const response = await fetch(BACKEND_URL + "/post_count")
+  const response = await backendFetch(BACKEND_URL + "/post_count")
 
   const data = await response.json();
 
@@ -36,7 +37,7 @@ export const getPostsCount = async ()   => {
 
 export const changePost = async (id:any, title:any, text:any, create_date:any )   => {
 
-  const response = await fetch(BACKEND_URL + "/change", {
+  const response = await backendFetch(BACKEND_URL + "/change", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -62,7 +63,7 @@ export const changePost = async (id:any, title:any, text:any, create_date:any ) 
 
 export const deletePost = async (id:any)   => {
 
-  const response = await fetch(BACKEND_URL + "/delete", {
+  const response = await backendFetch(BACKEND_URL + "/delete", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

@@ -18,7 +18,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { getPosts, getPostsCount } from "../../../utils/api/post";
+import { getPosts, getPostsCount } from "../../../api/post";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../config/theme";
 import Content from "./ModalWindow";

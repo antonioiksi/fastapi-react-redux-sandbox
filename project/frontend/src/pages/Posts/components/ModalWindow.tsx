@@ -5,9 +5,9 @@ import { TextField } from "@material-ui/core";
 import { Button, Stack } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { changePost, deletePost } from "../../../utils/api/post";
+import { changePost, deletePost } from "../../../api/post";
 import { useLocation } from "react-router";
-import { addEvent } from "../../../utils/api/event";
+import { addEvent } from "../../../api/event";
 
 const style = {
   position: "absolute" as "absolute",

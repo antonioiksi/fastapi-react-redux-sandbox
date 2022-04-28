@@ -20,7 +20,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../../config/theme";
-import { getEvents, getEventsCount } from "../../../../utils/api/event";
+import { getEvents, getEventsCount } from "../../../../api/event";
 import { Typography } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

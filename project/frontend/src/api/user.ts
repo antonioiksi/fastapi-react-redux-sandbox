@@ -1,7 +1,8 @@
-import { BACKEND_URL } from '../../config';
+import { BACKEND_URL } from '../config';
+import { backendFetch } from '../utils/backend_fetch';
 
 export const getUsers = async () => {
-  const response = await fetch(BACKEND_URL + "/users");
+  const response = await backendFetch(BACKEND_URL + "/users");
 
   const data = await response.json();
 
@@ -13,7 +14,7 @@ export const getUsers = async () => {
 };
 
 export const getUserInfo = async (token) => {
-  const response = await fetch(BACKEND_URL + "/info",{
+  const response = await backendFetch(BACKEND_URL + "/info",{
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -32,7 +33,7 @@ export const getUserInfo = async (token) => {
 
 export const logout = async (token)   => {
 
-  const response = await fetch(BACKEND_URL + "/logout",{
+  const response = await backendFetch(BACKEND_URL + "/logout",{
     method: 'GET',
     headers: {
       'Accept': 'application/json',

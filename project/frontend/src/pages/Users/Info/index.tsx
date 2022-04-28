@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getUserInfo } from "../../../utils/api/user";
+import { getUserInfo } from "../../../api/user";
 
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import Grid3x3Icon from "@mui/icons-material/Grid3x3";

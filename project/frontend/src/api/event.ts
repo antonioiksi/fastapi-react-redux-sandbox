@@ -1,7 +1,8 @@
-import { BACKEND_URL } from '../../config';
+import { BACKEND_URL } from '../config';
+import { backendFetch } from '../utils/backend_fetch';
 
 export const getEvents = async (limit:any, offset:any, sortby:any)   => {
-  const response = await fetch(BACKEND_URL + "/events", {
+  const response = await backendFetch(BACKEND_URL + "/events", {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -24,7 +25,7 @@ export const getEvents = async (limit:any, offset:any, sortby:any)   => {
 }
 
 export const getEventsCount = async ()   => {
-  const response = await fetch(BACKEND_URL + "/events_count")
+  const response = await backendFetch(BACKEND_URL + "/events_count")
 
   const data = await response.json();
 
@@ -39,7 +40,8 @@ export const addEvent = async (token, text)   => {
   var today = new Date();
   var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 
-  const response = await fetch(BACKEND_URL + "/add_event",{
+  console.log(token + " 11111111111111111111111111111111111")
+  const response = await backendFetch(BACKEND_URL + "/add_event",{
     method: 'POST',
     headers: {
       'Accept': 'application/json',

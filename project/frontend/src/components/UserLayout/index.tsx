@@ -31,7 +31,7 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { PersonAdd, Settings } from "@material-ui/icons";
-import { logout } from "../../utils/api/user";
+import { logout } from "../../api/user";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -121,16 +121,26 @@ export const Layout: FC = () => {
   });
 
   const [open, setOpen] = React.useState(false);
-  const [timeLeft, setTimeLeft] = useState(100);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
-    if (localStorage.getItem("token") && timeLeft > 0) {
+    var currentDate = new Date().getTime() / 1000;
+
+    if (
+      localStorage.getItem("token") &&
+      currentDate < parseFloat(localStorage.getItem("expire") as string)
+    ) {
       const timer = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
 
-      console.log(timeLeft);
+      // console.log(
+      //   "Осталось времени: " +
+      //     (parseFloat(localStorage.getItem("expire") as string) - currentDate)
+      // );
     } else {
+      logout(localStorage.getItem("token"));
+      localStorage.removeItem("token");
       navigate("/", { replace: true });
     }
   });

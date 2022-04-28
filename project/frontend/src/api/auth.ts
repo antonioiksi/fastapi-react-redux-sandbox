@@ -1,4 +1,4 @@
-// import decodeJwt from 'jwt-decode';
+import { BACKEND_URL } from "../config";
 
 export const isAuthenticated = () => {
   const permissions = localStorage.getItem('permissions');
@@ -22,7 +22,7 @@ export const login = async (email: string, password: string) => {
         "password": password
     };
 
-  const request = new Request('http://localhost:8502/user/login', {
+  const request = new Request(BACKEND_URL + '/user/login', {
     method: 'POST',
     body: JSON.stringify(Data),
   });
