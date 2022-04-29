@@ -20,6 +20,9 @@ import { login } from "../../api/auth";
 import theme from "../../config/theme";
 import jwt_decode from "jwt-decode";
 import { getEventsCount } from "../../redux/events";
+import { store } from "../../redux/store";
+import * as usersActions from "../../redux/users/actions";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -54,6 +57,10 @@ export const Login: FC = () => {
 
         localStorage.setItem("token", data.token);
         localStorage.setItem("expire", expire as string);
+        store.dispatch(usersActions.setUserToken(data.token));
+        // CounterComponent();
+
+        // console.log(store.getState().users.token);
         navigate("/dashboard");
       }
     } catch (err) {

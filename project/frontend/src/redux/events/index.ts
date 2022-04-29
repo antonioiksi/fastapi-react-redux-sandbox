@@ -35,7 +35,6 @@ export const getEventsCount = async ()   => {
 
   const data = await response.json();
 
-  // eventsActions.setEventsCount(100)
   store.dispatch(eventsActions.setEventsCount(100))
 
   if (data) {
