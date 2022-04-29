@@ -54,7 +54,7 @@ export default function BasicModal(props) {
   };
 
   const handleChangePost = async () => {
-    changePost(
+    await changePost(
       props.row.id,
       textfield_title,
       textfield_text,
@@ -69,7 +69,7 @@ export default function BasicModal(props) {
 
     props.settableData(data);
 
-    Alert("success", "Row " + props.row.id + " successful change");
+    await Alert("success", "Row " + props.row.id + " successful change");
 
     props.SetOpen(false);
   };
@@ -85,7 +85,7 @@ export default function BasicModal(props) {
 
     props.settableData(data);
 
-    Alert("error", "Row " + props.row.id + " successful delete");
+    await Alert("error", "Row " + props.row.id + " successful delete");
 
     props.SetOpen(false);
   };

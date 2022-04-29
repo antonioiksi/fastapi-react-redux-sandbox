@@ -124,7 +124,7 @@ export const Layout: FC = () => {
   const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
-    var currentDate = new Date().getTime() / 1000;
+    let currentDate = new Date().getTime() / 1000;
 
     if (
       localStorage.getItem("token") &&
@@ -134,16 +134,16 @@ export const Layout: FC = () => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
 
-      // console.log(
-      //   "Осталось времени: " +
-      //     (parseFloat(localStorage.getItem("expire") as string) - currentDate)
-      // );
+      console.log(
+        "Осталось времени: " +
+          (parseFloat(localStorage.getItem("expire") as string) - currentDate)
+      );
     } else {
       logout(localStorage.getItem("token"));
       localStorage.removeItem("token");
       navigate("/", { replace: true });
     }
-  });
+  }, [navigate, timeLeft]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
