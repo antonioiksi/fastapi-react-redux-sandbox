@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 import theme from "../../config/theme";
 import jwt_decode from "jwt-decode";
+import { getEventsCount } from "../../redux/events";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -92,7 +93,7 @@ export const Login: FC = () => {
           </Avatar>
 
           <Typography component="h1" variant="h6">
-            Sign in
+            Sign in <Button onClick={getEventsCount}>sdsdf</Button>
           </Typography>
           <div className={classes.margin}>
             <Grid container spacing={8} alignItems="flex-end">

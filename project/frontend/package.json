@@ -11,6 +11,7 @@
     "@mui/icons-material": "^5.6.0",
     "@mui/material": "^5.6.0",
     "@mui/styled-engine-sc": "^5.5.2",
+    "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
@@ -29,6 +30,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
