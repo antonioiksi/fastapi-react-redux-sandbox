@@ -30,16 +30,18 @@ export const getEvents = async (limit:any, offset:any, sortby:any)   => {
 }
 
 export const getEventsCount = async ()   => {
+
   const response = await backendFetch(BACKEND_URL + "/events_count")
 
   const data = await response.json();
+
+  // eventsActions.setEventsCount(100)
+  store.dispatch(eventsActions.setEventsCount(100))
 
   if (data) {
     return (data);
   }
 
-      eventsActions.setEventsCount(100)
-    //   store.dispatch(eventsActions.setEventsCount)
     //   return Promise.reject('Failed to get message from backend');
 
 }
