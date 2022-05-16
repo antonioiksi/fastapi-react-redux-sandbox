@@ -6,8 +6,8 @@ import { Button, Stack } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { changePost, deletePost } from "../../../api/post";
-import { useLocation } from "react-router";
 import { addEvent } from "../../../api/event";
+import { store } from "../../../redux/store";
 
 const style = {
   position: "absolute" as "absolute",
@@ -46,7 +46,7 @@ export default function BasicModal(props) {
   };
 
   const Alert = async (type, text) => {
-    await addEvent(localStorage.getItem("token"), text);
+    await addEvent(store.getState().users.token, text);
 
     props.setOpenmsg(true);
     props.setTextmsg(text);

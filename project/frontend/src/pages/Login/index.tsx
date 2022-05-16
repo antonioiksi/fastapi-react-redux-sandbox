@@ -19,10 +19,9 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 import theme from "../../config/theme";
 import jwt_decode from "jwt-decode";
-import { getEventsCount } from "../../redux/events";
 import { store } from "../../redux/store";
 import * as usersActions from "../../redux/users/actions";
-import { useSelector } from "react-redux";
+import * as timeActions from "../../redux/time/actions";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -55,12 +54,9 @@ export const Login: FC = () => {
       if (data) {
         let expire = jwt_decode<object>(data.token)["expire"];
 
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("expire", expire as string);
         store.dispatch(usersActions.setUserToken(data.token));
-        // CounterComponent();
+        store.dispatch(timeActions.setExpireTime(expire));
 
-        // console.log(store.getState().users.token);
         navigate("/dashboard");
       }
     } catch (err) {
@@ -100,7 +96,7 @@ export const Login: FC = () => {
           </Avatar>
 
           <Typography component="h1" variant="h6">
-            Sign in <Button onClick={getEventsCount}>sdsdf</Button>
+            Sign in
           </Typography>
           <div className={classes.margin}>
             <Grid container spacing={8} alignItems="flex-end">

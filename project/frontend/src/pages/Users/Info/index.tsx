@@ -16,6 +16,7 @@ import KeyIcon from "@mui/icons-material/Key";
 import HomeIcon from "@mui/icons-material/Home";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import Message from "../../../components/Alert";
+import { store } from "../../../redux/store";
 
 <Message Message={"Test text"} />;
 
@@ -31,7 +32,7 @@ export default function Users() {
   useEffect(() => {
     async function fetchMyAPI() {
       try {
-        const data = await getUserInfo(localStorage.getItem("token"));
+        const data = await getUserInfo(store.getState().users.token);
         setInfo(data);
       } catch {}
     }

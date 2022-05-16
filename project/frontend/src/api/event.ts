@@ -40,7 +40,7 @@ export const addEvent = async (token, text)   => {
   var today = new Date();
   var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 
-  const response = await backendFetch(BACKEND_URL + "/add_event",{
+  const response = await fetch(BACKEND_URL + "/add_event",{
     method: 'POST',
     headers: {
       'Accept': 'application/json',

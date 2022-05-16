@@ -19,6 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import { store } from "../../redux/store";
 import React, { FC, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -125,21 +126,17 @@ export const Layout: FC = () => {
 
   useEffect(() => {
     let currentDate = new Date().getTime() / 1000;
+    let token = store.getState().users.token;
+    let expire = store.getState().time.expire;
 
-    if (
-      localStorage.getItem("token") &&
-      currentDate < parseFloat(localStorage.getItem("expire") as string)
-    ) {
+    if (token && currentDate < expire) {
       const timer = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
 
-      console.log(
-        "Осталось времени: " +
-          (parseFloat(localStorage.getItem("expire") as string) - currentDate)
-      );
+      console.log("Осталось времени: " + (expire - currentDate).toString());
     } else {
-      logout(localStorage.getItem("token"));
+      logout(token);
       localStorage.removeItem("token");
       navigate("/", { replace: true });
     }
@@ -161,7 +158,7 @@ export const Layout: FC = () => {
   };
 
   const handleLogout = (token) => {
-    logout(localStorage.getItem("token"));
+    logout(store.getState().users.token);
     localStorage.removeItem("token");
     navigate("/", { replace: true });
   };
