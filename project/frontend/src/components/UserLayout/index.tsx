@@ -33,6 +33,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { PersonAdd, Settings } from "@material-ui/icons";
 import { logout } from "../../api/user";
+import * as timeActions from "../../redux/time/actions";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -122,25 +123,28 @@ export const Layout: FC = () => {
   });
 
   const [open, setOpen] = React.useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
-    let currentDate = new Date().getTime() / 1000;
-    let token = store.getState().users.token;
-    let expire = store.getState().time.expire;
+    let interval;
+    interval = setInterval(() => {
+      let currentDate = new Date().getTime() / 1000;
+      let token = store.getState().users.token;
+      let expire = store.getState().time.expire;
 
-    if (token && currentDate < expire) {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-
-      console.log("Осталось времени: " + (expire - currentDate).toString());
-    } else {
-      logout(token);
-      localStorage.removeItem("token");
-      navigate("/", { replace: true });
-    }
-  }, [navigate, timeLeft]);
+      if (token && currentDate < expire) {
+        store.dispatch(timeActions.setExpireTime(expire));
+        console.log(
+          "Осталось времени: " +
+            (store.getState().time.expire - currentDate).toString()
+        );
+      } else {
+        clearInterval(interval);
+        logout(token);
+        localStorage.removeItem("token");
+        navigate("/", { replace: true });
+      }
+    }, 1000);
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
