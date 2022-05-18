@@ -5,7 +5,7 @@
 # IMG    = ${NAME}:${TAG}
 # LATEST := ${NAME}:latest
 
-all: backend frontend
+all: backend
 
 backend: build run-dev migrate initial-db
 

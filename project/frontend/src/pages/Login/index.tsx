@@ -96,7 +96,7 @@ export const Login: FC = () => {
           </Avatar>
 
           <Typography component="h1" variant="h6">
-            Sign in
+            Sign in1
           </Typography>
           <div className={classes.margin}>
             <Grid container spacing={8} alignItems="flex-end">
