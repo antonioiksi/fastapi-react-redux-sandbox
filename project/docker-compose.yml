@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  backend:
+    image: room33/backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: 'postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}'
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
+    depends_on:
+      - "postgres"
+
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    volumes:
+      # - ./backend/scripts:/www/scripts
+      - ./backend/app/scripts/create-db:/docker-entrypoint-initdb.d # load data after postgres started
+
+  # nginx:
+  #   image: nginx:1.17
+  #   volumes:
+  #     # - ./nginx/conf.d:/etc/nginx/conf.d
+  #     - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+  #   ports:
+  #     - 8500:80
+  #   depends_on:
+  #     - backend
+

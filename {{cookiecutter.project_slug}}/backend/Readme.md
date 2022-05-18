@@ -48,7 +48,7 @@ python  main.py
 
 
 ## api signup
-    http://localhost:8081/user/signup 
+    http://localhost:8888/user/signup 
 
 **Input json**
 ```json
@@ -68,7 +68,7 @@ python  main.py
 }
 ```
 ## api posts
-    http://localhost:8081/posts
+    http://localhost:8888/posts
 
 **Authorization**
 ```sh
