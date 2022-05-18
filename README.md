@@ -1,5 +1,7 @@
 # Fastapi-ReactJS
 
+## TODO: CookieCutter NOT READY!!!!!! 
+
 ## How to develop
 ```sh
 cd project

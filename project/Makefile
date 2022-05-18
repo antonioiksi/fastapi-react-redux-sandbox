@@ -5,7 +5,11 @@
 # IMG    = ${NAME}:${TAG}
 # LATEST := ${NAME}:latest
 
-all: build run-dev migrate initial-db
+all: backend frontend
+
+backend: build run-dev migrate initial-db
+
+frontend: frontend-install frontend-run
 
 hello:
 	echo "hello world" 
@@ -44,3 +48,9 @@ test-one: migrate
 
 initial-db:
 	docker exec -i project_backend_1 bash -c "python init_db.py"
+
+frontend-install:
+	cd frontend && npm ci;
+		
+frontend-run:
+	cd frontend && npm start;
