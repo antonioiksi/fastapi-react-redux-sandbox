@@ -6,6 +6,7 @@
 * Postgres
 * SqlAlchemy with Alembic for migration
 * Nginx as a reverse proxy (to allow backend and frontend run on the same port)
+* NodeJS 15>
 
 DevOps
 * Docker
@@ -19,16 +20,34 @@ DevOps
 > Setup env **DOCKER_HOST** locally
 > `$ export DOCKER_HOST=tcp://172.22.115.221:2376`
 
-### Start develop
-Just run
+### Develop project
+#### Backend
+
+Build docker container with DB and run backend server
 ```sh
-$ make
+make
+```
+Check out url `http://localhost:8502`
+Configure ports in env, yml files
+
+Stop development
+```sh
+make clean
 ```
 
-### Stop develop
+
+#### Frontend
+
+Install npm packages and build and run dev ReactJS server
 ```sh
-$ make clean` 
+cd frontend
+npm ci # install packages from package-lock.json
+npm start
 ```
+
+Check out url `http://localhost:3000/` with credentials 
+`Email: 1`
+`Password: 1`
 
 ### Run test
 ```sh
@@ -38,7 +57,7 @@ make tests
 
 ## Api Documentation
 
-[Documentation](http://localhost:8502/api/docs#)
+[Documentation](http://localhost:8502/api/docs)
 
 ## Unittest
 
